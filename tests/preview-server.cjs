@@ -43,8 +43,8 @@ http.createServer((req, res) => {
   let body = fs.readFileSync(filename);
   if (scenario) {
     body = body.toString('utf8').replace('<head>', '<head><base href="/">')
-      .replace('<script src="site.js?v=brand-2" defer></script>', '')
-      .replace('<script src="trial.js" defer></script>', `<script src="test-fixture.js?case=${scenario}" defer></script><script src="site.js?v=brand-2" defer></script><script src="trial.js" defer></script>`)
+      .replace('<script src="site.js?v=brand-3" defer></script>', '')
+      .replace('<script src="trial.js" defer></script>', `<script src="test-fixture.js?case=${scenario}" defer></script><script src="site.js?v=brand-3" defer></script><script src="trial.js" defer></script>`)
       .replace('<body id="top">', `<body id="top"><p style="padding:12px;background:#f8e899;color:#171717;text-align:center;font:14px sans-serif">LOCAL TEST: ${scenario} · 실제 제품/배포 자료가 아닙니다</p>`);
   }
   send(body, types[path.extname(filename)] || 'application/octet-stream');

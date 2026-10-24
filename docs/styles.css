@@ -147,7 +147,7 @@ button {
 .hero h1 {
   font-size:clamp(100px,18.3vw,290px);
   font-weight:700;
-  line-height:.79;
+  line-height:.90;
   letter-spacing:-.074em;
   margin:52px 0 54px -.065em;
 }
@@ -709,7 +709,7 @@ button {
   }
   .hero h1 {
     font-size:18.3vw;
-    line-height:.87;
+    line-height:.94;
     margin-top:49px;
     margin-bottom:42px;
     letter-spacing:-.073em;
