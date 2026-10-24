@@ -2,3 +2,6 @@
 Thumbs.db
 __pycache__/
 *.log
+
+# Local-only QA output; never publish as media
+tests/.generated/
