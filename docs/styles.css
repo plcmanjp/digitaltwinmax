@@ -1005,6 +1005,10 @@ button {
   grid-template-columns:1fr 1fr;
   gap:28px;
 }
+.scene-grid-3 {
+  grid-template-columns:1fr 1fr 1fr;
+  margin-top:36px;
+}
 .scene-grid h3 {
   margin:18px 0 8px;
   font-size:22px;
@@ -1027,6 +1031,9 @@ button {
   .hero h1 {
     font-size:72px;
   }
+  .scene-grid-3 {
+    grid-template-columns:1fr;
+  }
 }
 @media(max-width:700px) {
   .hero {
@@ -1047,7 +1054,7 @@ button {
   .scenes {
     padding:56px 0 40px;
   }
-  .scene-grid {
+  .scene-grid,.scene-grid-3 {
     grid-template-columns:1fr;
     gap:32px;
   }
