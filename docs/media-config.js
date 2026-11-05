@@ -6,16 +6,22 @@
 window.DTM_MEDIA = {
   images: [
     {
-      src: "assets/app-mini-mps-edit.jpg",
-      alt: "factory01 편집 화면. 가운데 3D 뷰포트에 컨베이어, 신호등, 매거진이 놓인 미니 설비 샘플이 보이고, 왼쪽에는 부품 트리가 있다.",
-      title: "편집 화면",
-      caption: "샘플 설비를 연 편집 화면입니다. 체험판 공개나 전체 기능의 완료를 뜻하지 않습니다."
+      src: "assets/app-scene-iso.jpg",
+      alt: "factory01 등각 시점. 3D 뷰포트 가운데에 컨베이어, 신호등, 매거진이 있는 샘플 설비가 보인다.",
+      title: "등각 시점",
+      caption: "샘플 설비를 연 편집 화면입니다."
     },
     {
-      src: "assets/app-mini-mps-play.jpg",
-      alt: "같은 샘플을 가상 실행으로 재생한 factory01 화면. 위쪽에 재생 막대가 있고 설비는 3D 뷰포트 가운데에 있다.",
-      title: "가상 실행",
-      caption: "가상 실행을 시작한 화면입니다. 실제 장비 연결이나 동작 검증을 대신하지 않습니다."
+      src: "assets/app-scene-top.jpg",
+      alt: "같은 샘플을 위에서 본 화면. 컨베이어가 가로로 놓이고 위쪽에 초록 매거진이 있다.",
+      title: "위 시점",
+      caption: "위에서 보면 컨베이어, 매거진, 조작 버튼의 배치가 한 평면에 보입니다."
+    },
+    {
+      src: "assets/app-scene-front.jpg",
+      alt: "같은 샘플의 정면 시점. 위쪽에 가상 실행 막대가 있고 신호등과 라인이 옆으로 늘어서 있다.",
+      title: "정면, 가상 실행",
+      caption: "정면으로 바꾼 뒤 가상 실행을 시작한 화면입니다. 실제 장비에는 연결하지 않았습니다."
     }
   ],
   videos: []
