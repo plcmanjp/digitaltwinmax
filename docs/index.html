@@ -12,9 +12,10 @@
   <meta property="og:url" content="https://plcmanjp.github.io/digitaltwinmax/">
   <link rel="canonical" href="https://plcmanjp.github.io/digitaltwinmax/">
   <link rel="icon" type="image/svg+xml" href="assets/mark.svg?v=brand-3">
-  <link rel="stylesheet" href="styles.css?v=promo-3">
+  <link rel="stylesheet" href="styles.css?v=promo-4">
   <script src="media-config.js?v=promo-2" defer></script>
   <script src="media.js?v=promo-3" defer></script>
+  <script src="viewer.js?v=promo-4" defer></script>
   <script src="site.js?v=brand-3" defer></script>
   <script src="releases.js" defer></script>
   <script src="trial.js" defer></script>
@@ -40,7 +41,10 @@
         </div>
       </div>
       <figure class="hero-figure">
-        <img src="assets/app-scene-iso.jpg" width="1568" height="882" alt="factory01 등각 시점. 3D 뷰포트 가운데에 컨베이어, 신호등, 매거진이 있는 샘플 설비가 보인다.">
+        <button type="button" class="zoom-frame" aria-haspopup="dialog">
+          <img src="assets/app-scene-iso.jpg" width="1568" height="882" alt="factory01 등각 시점. 3D 뷰포트 가운데에 컨베이어, 신호등, 매거진이 있는 샘플 설비가 보인다.">
+          <span class="sr-only">확대</span>
+        </button>
         <figcaption>등각 시점. 샘플 설비를 연 편집 화면입니다.</figcaption>
       </figure>
     </section>
@@ -49,29 +53,29 @@
         <div class="section-heading"><div><p class="eyebrow">SCENES</p><h2 id="scenes-title">같은 샘플, 다른 장면.</h2></div><p class="section-description">배치와 정면, 그리고<br>가까이서 본 동작입니다.</p></div>
         <div class="scene-grid">
           <article>
-            <img src="assets/app-scene-top.jpg" width="1568" height="882" alt="같은 샘플을 위에서 본 화면. 컨베이어가 가로로 놓이고 위쪽에 초록 매거진이 있다.">
+            <button type="button" class="zoom-frame" aria-haspopup="dialog"><img src="assets/app-scene-top.jpg" width="1568" height="882" alt="같은 샘플을 위에서 본 화면. 컨베이어가 가로로 놓이고 위쪽에 초록 매거진이 있다."><span class="sr-only">확대</span></button>
             <h3>위 시점</h3>
             <p>위에서 보면 컨베이어, 매거진, 조작 버튼의 배치가 한 평면에 보입니다.</p>
           </article>
           <article>
-            <img src="assets/app-scene-front.jpg" width="1568" height="882" alt="같은 샘플의 정면 시점. 위쪽에 가상 실행 막대가 있고 신호등과 라인이 옆으로 늘어서 있다.">
+            <button type="button" class="zoom-frame" aria-haspopup="dialog"><img src="assets/app-scene-front.jpg" width="1568" height="882" alt="같은 샘플의 정면 시점. 위쪽에 가상 실행 막대가 있고 신호등과 라인이 옆으로 늘어서 있다."><span class="sr-only">확대</span></button>
             <h3>정면, 가상 실행</h3>
             <p>정면으로 바꾼 뒤 가상 실행을 시작한 화면입니다. 실제 장비에는 연결하지 않았습니다.</p>
           </article>
         </div>
         <div class="scene-grid scene-grid-3">
           <article>
-            <img src="assets/film-feed.jpg" width="1280" height="720" alt="공급 매거진을 가까이서 본 가상 실행 화면. 적재물 하나가 매거진에서 나와 컨베이어 위에 있다.">
+            <button type="button" class="zoom-frame" aria-haspopup="dialog"><img src="assets/film-feed.jpg" width="1280" height="720" alt="공급 매거진을 가까이서 본 가상 실행 화면. 적재물 하나가 매거진에서 나와 컨베이어 위에 있다."><span class="sr-only">확대</span></button>
             <h3>공급 확대</h3>
             <p>매거진에서 적재물이 나와 컨베이어로 넘어가는 장면입니다.</p>
           </article>
           <article>
-            <img src="assets/film-place.jpg" width="1280" height="720" alt="이송부와 적재함을 가까이서 본 가상 실행 화면. 초록 적재함에 제품이 있고 빨간 통에도 제품이 있다.">
+            <button type="button" class="zoom-frame" aria-haspopup="dialog"><img src="assets/film-place.jpg" width="1280" height="720" alt="이송부와 적재함을 가까이서 본 가상 실행 화면. 초록 적재함에 제품이 있고 빨간 통에도 제품이 있다."><span class="sr-only">확대</span></button>
             <h3>적재 확대</h3>
             <p>이송부가 제품을 집어 적재함으로 옮기는 장면입니다.</p>
           </article>
           <article>
-            <img src="assets/film-select.jpg" width="1280" height="720" alt="부품 트리에서 Magazine을 선택한 화면. 3D의 매거진이 강조되고 오른쪽 속성에 위치 값이 보인다.">
+            <button type="button" class="zoom-frame" aria-haspopup="dialog"><img src="assets/film-select.jpg" width="1280" height="720" alt="부품 트리에서 Magazine을 선택한 화면. 3D의 매거진이 강조되고 오른쪽 속성에 위치 값이 보인다."><span class="sr-only">확대</span></button>
             <h3>부품 선택</h3>
             <p>트리에서 고르면 3D와 속성 패널이 함께 따라옵니다.</p>
           </article>
