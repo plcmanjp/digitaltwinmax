@@ -77,8 +77,11 @@ class Element {
   constructor(tag, doc) { this.tagName = tag.toUpperCase(); this.ownerDocument = doc; this.children = []; this.className = ''; this.attributes = {}; this.listeners = {}; this.hidden = false; this.textContent = ''; this.scrollLeft = 0; this.clientWidth = 900; this.scrollWidth = 900; this.pauseCount = 0; this.paused = true; this.scrollCalls = []; }
   get classList() {
     const read = () => new Set(this.className.split(/\s+/).filter(Boolean));
-    return { add: value => { const s = read(); s.add(value); this.className = [...s].join(' '); }, contains: value => read().has(value), toggle: (value, force) => { const s = read(); const add = force === undefined ? !s.has(value) : force; if (add) s.add(value); else s.delete(value); this.className = [...s].join(' '); return add; } };
+    return { add: value => { const s = read(); s.add(value); this.className = [...s].join(' '); }, remove: value => { const s = read(); s.delete(value); this.className = [...s].join(' '); }, contains: value => read().has(value), toggle: (value, force) => { const s = read(); const add = force === undefined ? !s.has(value) : force; if (add) s.add(value); else s.delete(value); this.className = [...s].join(' '); return add; } };
   }
+  getBoundingClientRect() { const index = Math.max(0, this.parent?.children.indexOf(this) ?? 0); return { left: index * 120, top: 0, width: 100, height: 64, right: index * 120 + 100, bottom: 64 }; }
+  setPointerCapture() {}
+  focus() { this.ownerDocument.active = this; }
   setAttribute(name, value) { this.attributes[name] = String(value); }
   getAttribute(name) { return this.attributes[name] ?? null; }
   append(...children) { children.forEach(child => { child.parent = this; child.offsetLeft = 100 + this.children.length * 862; this.children.push(child); }); if (this.classList.contains('gallery-track')) this.scrollWidth = Math.max(900, this.children.length * 862 - 18); }
@@ -119,19 +122,62 @@ test('single-image galleries show one slide and mark redundant navigation for CS
   assert.equal(f.state.textContent, '01 IMAGES');
   assert.equal(f.section.querySelector('img').alt, '합성 테스트 이미지 1');
 });
-test('multiple galleries expose labels, counts, constrained navigation and no automatic advance', () => {
+test('multiple galleries expose labels, counts, direct scene choices and no automatic advance', () => {
   const f = fixture(); const api = mount(f.section, [image(1), image(2), image(3)], 'images');
-  const [previous, next] = f.section.querySelectorAll('button');
+  const picks = f.section.querySelectorAll('.gallery-pick');
   assert.equal(api.track.tabIndex, 0);
   assert.equal(api.track.getAttribute('aria-roledescription'), '캐러셀');
-  assert.equal(previous.getAttribute('aria-disabled'), 'true');
-  assert.equal(next.getAttribute('aria-disabled'), 'false');
+  assert.equal(picks.length, 3);
+  assert.equal(f.section.querySelector('.gallery-button'), null);
+  assert.equal(picks[0].getAttribute('aria-current'), 'true');
+  assert.equal(picks[0].tabIndex, 0);
+  assert.equal(picks[1].getAttribute('aria-current'), 'false');
+  assert.equal(picks[1].tabIndex, -1);
+  assert.equal(f.section.querySelector('.gallery-picker').getAttribute('role'), 'toolbar');
   f.flushTimers(); assert.equal(api.index, 0);
-  next.emit('click'); next.emit('click'); next.emit('click');
+  picks[2].emit('click');
   assert.equal(api.index, 2);
-  assert.equal(next.getAttribute('aria-disabled'), 'true');
+  assert.equal(picks[2].getAttribute('aria-current'), 'true');
+  assert.equal(picks[0].getAttribute('aria-current'), 'false');
+  assert.equal(api.slides[2].classList.contains('is-current'), true);
   assert.equal(f.section.querySelector('.gallery-position').textContent, '03 / 03');
-  previous.emit('click'); assert.equal(api.index, 1);
+  picks[1].emit('click'); assert.equal(api.index, 1);
+});
+test('dragging the scene picker follows the pointer without turning the release into a second choice', () => {
+  const f = fixture(); const api = mount(f.section, [image(1), image(2), image(3)], 'images');
+  const picker = f.section.querySelector('.gallery-picker');
+  const picks = f.section.querySelectorAll('.gallery-pick');
+  picker.emit('pointerdown', { button: 0, pointerId: 4, clientX: 20 });
+  picker.emit('pointermove', { pointerId: 4, clientX: 24 });
+  assert.equal(api.index, 0);
+  picker.emit('pointermove', { pointerId: 4, clientX: 250 });
+  assert.equal(api.index, 2);
+  assert.equal(picker.classList.contains('is-grabbing'), true);
+  picker.emit('pointerup', { pointerId: 4, clientX: 250 });
+  assert.equal(picker.classList.contains('is-grabbing'), false);
+  picks[0].emit('click');
+  assert.equal(api.index, 2);
+  f.flushTimers();
+  picks[0].emit('click');
+  assert.equal(api.index, 0);
+});
+test('scene picker arrows move within the ends and a visible neighbor can be chosen directly', () => {
+  const f = fixture(); const api = mount(f.section, [image(1), image(2), image(3)], 'images');
+  const picker = f.section.querySelector('.gallery-picker');
+  const picks = f.section.querySelectorAll('.gallery-pick');
+  const press = (pick, key) => picker.emit('keydown', { key, target: pick });
+  assert.equal(press(picks[0], 'ArrowRight').defaultPrevented, true);
+  assert.equal(api.index, 1);
+  assert.equal(f.doc.active, picks[1]);
+  press(picks[1], 'End'); assert.equal(api.index, 2);
+  press(picks[2], 'ArrowRight'); assert.equal(api.index, 2);
+  press(picks[2], 'Home'); assert.equal(api.index, 0);
+  assert.equal(press(picks[0], 'ArrowLeft').defaultPrevented, true);
+  assert.equal(api.index, 0);
+  api.slides[2].emit('click'); assert.equal(api.index, 2);
+  api.slides[2].emit('click'); assert.equal(api.index, 2);
+  const link = f.doc.createElement('a'); link.parent = api.slides[1];
+  api.slides[1].emit('click', { target: link }); assert.equal(api.index, 2);
 });
 test('focused tracks accept arrows, Home and End without hijacking descendant controls', () => {
   const f = fixture(); const api = mount(f.section, [image(1), image(2), image(3)], 'images');
@@ -157,6 +203,7 @@ test('native pointer/wheel scroll updates the displayed position after navigatio
   api.go(1);
   api.track.emit('pointerdown'); api.track.scrollLeft = 1668; api.track.emit('scroll'); f.flushFrames();
   assert.equal(api.index, 2);
+  assert.equal(f.section.querySelectorAll('.gallery-pick')[2].getAttribute('aria-current'), 'true');
   api.track.emit('wheel'); api.track.scrollLeft = 0; api.track.emit('scroll'); f.flushFrames();
   assert.equal(api.index, 0);
 });
@@ -207,6 +254,9 @@ test('video and caption failures remain visible as accessible status messages', 
 test('captions and titles are inserted as text rather than interpreted markup', () => {
   const f = fixture(); mount(f.section, [image(1, { title: '<script>alert(1)</script>', caption: '<img src=x>' })], 'images');
   assert.equal(f.section.querySelectorAll('script').length, 0);
-  assert.equal(f.section.querySelectorAll('img').length, 1);
+  assert.equal(f.section.querySelector('.media-caption').querySelectorAll('img').length, 0);
+  assert.equal(f.section.querySelector('.media-stage').querySelector('img').alt, '합성 테스트 이미지 1');
+  assert.equal(f.section.querySelector('.gallery-pick-image').alt, '');
   assert.equal(f.section.querySelector('.media-caption').querySelector('strong').textContent, '<script>alert(1)</script>');
+  assert.equal(f.section.querySelector('.gallery-pick-title').textContent, '<script>alert(1)</script>');
 });

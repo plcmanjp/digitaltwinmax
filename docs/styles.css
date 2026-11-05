@@ -316,7 +316,7 @@ button {
   display:none;
 }
 .gallery-slide {
-  flex:0 0 calc(100% - 56px);
+  flex:0 0 calc(100% - 132px);
   min-width:0;
   scroll-snap-align:start;
   scroll-snap-stop:always;
@@ -386,49 +386,89 @@ button {
   min-height:32px;
 }
 .gallery-bar {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:24px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:14px 24px;
+  align-items:end;
   padding-top:22px;
 }
 .gallery-hint {
   color:var(--dark-muted);
-  font-size:11px;
-}
-.gallery-controls {
-  display:flex;
-  align-items:center;
-  gap:9px;
-  margin-left:auto;
+  font-size:12px;
 }
 .gallery-position {
   font-size:12px;
   font-variant-numeric:tabular-nums;
   letter-spacing:.08em;
-  min-width:80px;
-  text-align:center;
-  padding-right:14px;
 }
-.gallery-button {
-  border:1px solid #5b5d57;
-  border-radius:50%;
-  background:transparent;
-  width:44px;
-  height:44px;
+.gallery-picker {
+  grid-column:1 / -1;
   display:grid;
-  place-items:center;
-  font-size:20px;
-  transition:background .2s,border-color .2s,color .2s;
+  grid-template-columns:repeat(auto-fit,minmax(148px,1fr));
+  gap:14px 12px;
+  touch-action:pan-y;
+  cursor:grab;
+  user-select:none;
 }
-.gallery-button:hover:not([aria-disabled="true"]) {
-  background:var(--paper);
-  color:var(--ink);
-  border-color:var(--paper);
+.gallery-picker.is-grabbing {
+  cursor:grabbing;
 }
-.gallery-button[aria-disabled="true"] {
-  opacity:.3;
-  cursor:default;
+.gallery-pick {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  min-width:0;
+  margin:0;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:inherit;
+  text-align:left;
+}
+.gallery-pick-frame {
+  display:block;
+  aspect-ratio:16/9;
+  background:#232522;
+  outline:1px solid #3e403c;
+}
+.gallery-pick-image {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:.5;
+  transition:opacity .2s;
+}
+.gallery-pick-title {
+  font-size:12px;
+  line-height:1.35;
+  color:var(--dark-muted);
+}
+.gallery-pick[aria-current="true"] .gallery-pick-frame {
+  outline:2px solid var(--paper);
+  outline-offset:3px;
+}
+.gallery-pick[aria-current="true"] .gallery-pick-image,
+.gallery-pick:hover .gallery-pick-image,
+.gallery-pick:focus-visible .gallery-pick-image {
+  opacity:1;
+}
+.gallery-pick[aria-current="true"] .gallery-pick-title {
+  color:var(--paper);
+}
+.gallery-slide:not(.is-current) .media-stage {
+  cursor:pointer;
+}
+.gallery-slide:not(.is-current) .media-stage::after {
+  content:"이 장면";
+  position:absolute;
+  left:12px;
+  top:12px;
+  padding:5px 8px;
+  background:rgba(23,23,23,.78);
+  color:var(--paper);
+  font-size:11px;
+  letter-spacing:.06em;
+  pointer-events:none;
 }
 .gallery.is-single .gallery-bar {
   display:none;
@@ -797,7 +837,7 @@ button {
     padding-top:22px;
   }
   .gallery-slide {
-    flex-basis:calc(100% - 20px);
+    flex-basis:100%;
   }
   .gallery-track {
     gap:10px;
@@ -815,25 +855,19 @@ button {
     font-size:11px;
   }
   .gallery-bar {
-    padding-top:14px;
-    gap:10px;
+    padding-top:16px;
+    gap:10px 16px;
   }
   .gallery-hint {
-    font-size:10px;
-    max-width:15ch;
-    line-height:1.8;
+    font-size:11px;
+    line-height:1.6;
   }
   .gallery-position {
-    min-width:64px;
-    padding-right:5px;
     font-size:11px;
   }
-  .gallery-button {
-    width:42px;
-    height:42px;
-  }
-  .gallery-controls {
-    gap:6px;
+  .gallery-picker {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px 10px;
   }
   .media-failure {
     font-size:11px;

@@ -60,6 +60,20 @@
     track.setAttribute("aria-label", `${name} 모음`);
     track.tabIndex = items.length > 1 ? 0 : -1;
     const videos = [];
+    const failedCaptions = new Set();
+    let current = 0;
+    const caption = make("div", "media-caption");
+    caption.id = `${section.id}-caption`;
+    const captionCopy = make("div");
+    const captionTitle = make("strong");
+    const captionBody = make("p");
+    const captionNote = make("p");
+    const captionWarning = make("p", "caption-warning");
+    captionWarning.hidden = true;
+    captionWarning.setAttribute("role", "status");
+    const captionLink = make("a", "", "영상 내용 읽기 ↗");
+    captionCopy.append(captionTitle, captionBody, captionNote, captionWarning);
+    caption.append(captionCopy, captionLink);
     const slides = items.map((item, index) => {
       const slide = make("figure", "gallery-slide");
       slide.setAttribute("role", "group");
@@ -90,7 +104,7 @@
         media.defaultMuted = true;
         media.poster = item.poster;
         media.setAttribute("aria-label", item.title);
-        media.setAttribute("aria-describedby", `${section.id}-caption-${index}`);
+        media.setAttribute("aria-describedby", `${section.id}-caption`);
         media.tabIndex = index ? -1 : 0;
         videos.push(media);
         if (item.captions) {
@@ -101,8 +115,8 @@
           captions.label = item.captionLabel;
           captions.default = true;
           captions.addEventListener("error", () => {
-            const note = slide.querySelector(".caption-warning");
-            if (note) note.hidden = false;
+            failedCaptions.add(index);
+            if (index === current) captionWarning.hidden = false;
           }, { once: true });
           media.append(captions);
         }
@@ -113,63 +127,87 @@
       }
       media.src = item.src;
       stage.append(media, failure);
-      const caption = make("figcaption", "media-caption");
-      caption.id = `${section.id}-caption-${index}`;
-      const copy = make("div");
-      copy.append(make("strong", "", item.title));
-      if (item.caption) copy.append(make("p", "", item.caption));
-      if (kind === "videos") {
-        copy.append(make("p", "", item.silent ? "무음 영상 · 재생 버튼을 눌러 시작하세요." : "재생 버튼을 눌러 시작하세요. 기본 음소거 · 자막 제공"));
-        if (item.captions) {
-          const warning = make("p", "caption-warning", item.transcript ? "자막을 불러올 수 없습니다. 영상 내용 읽기를 이용하거나 잠시 후 다시 확인해 주세요." : "자막을 불러올 수 없습니다. 잠시 후 다시 확인해 주세요.");
-          warning.hidden = true;
-          warning.setAttribute("role", "status");
-          copy.append(warning);
+      slide.addEventListener("click", event => {
+        if (index === current) return;
+        let node = event.target;
+        while (node && node !== slide) {
+          if (node.tagName === "A") return;
+          node = node.parent;
         }
-      }
-      caption.append(copy);
-      if (item.transcript) {
-        const link = make("a", "", "영상 내용 읽기 ↗");
-        link.href = item.transcript;
-        caption.append(link);
-      }
-      slide.append(stage, caption);
+        go(index);
+      });
+      slide.append(stage);
       return slide;
     });
     track.append(...slides);
     const bar = make("div", "gallery-bar");
-    const hint = make("p", "gallery-hint", "좌우로 넘겨 보세요.");
+    const hint = make("p", "gallery-hint", items.length > 1 ? "포스터를 고르거나 끌어 장면을 바꾸세요." : "");
     hint.id = `${section.id}-hint`;
     if (items.length > 1) track.setAttribute("aria-describedby", hint.id);
-    const controls = make("div", "gallery-controls");
     const position = make("span", "gallery-position");
     position.setAttribute("aria-live", "polite");
     position.setAttribute("aria-atomic", "true");
-    const previous = make("button", "gallery-button", "←");
-    const next = make("button", "gallery-button", "→");
-    for (const [button, label] of [[previous, `이전 ${name}`], [next, `다음 ${name}`]]) {
+    const picker = make("div", "gallery-picker");
+    picker.setAttribute("role", "toolbar");
+    picker.setAttribute("aria-label", `${name} 선택`);
+    picker.setAttribute("aria-orientation", "horizontal");
+    let suppressClick = false;
+    const picks = items.map((item, index) => {
+      const button = make("button", "gallery-pick");
       button.type = "button";
-      button.setAttribute("aria-label", label);
       button.setAttribute("aria-controls", track.id);
-    }
-    controls.append(position, previous, next);
-    bar.append(hint, controls);
-    gallery.append(track, bar);
+      button.setAttribute("aria-label", `${index + 1}. ${item.title}`);
+      const frame = make("span", "gallery-pick-frame");
+      const thumb = make("img", "gallery-pick-image");
+      thumb.alt = "";
+      thumb.decoding = "async";
+      thumb.loading = index ? "lazy" : "eager";
+      thumb.src = kind === "videos" ? item.poster : item.src;
+      frame.append(thumb);
+      button.append(frame, make("span", "gallery-pick-title", item.title));
+      button.addEventListener("click", () => {
+        if (suppressClick) {
+          suppressClick = false;
+          return;
+        }
+        go(index);
+      });
+      return button;
+    });
+    picker.append(...picks);
+    bar.append(hint, position, picker);
+    gallery.append(track, bar, caption);
     gallery.classList.toggle("is-single", items.length === 1);
     gallery.hidden = false;
     if (empty) empty.hidden = true;
     if (state) state.textContent = `${String(items.length).padStart(2, "0")} ${kind === "images" ? "IMAGES" : "FILMS"}`;
     section.classList.add("has-media");
-    let current = 0;
     let destination = null;
     let settleTimer;
     let frame;
+    let drag = null;
     const offsets = () => slides.map(slide => Math.min(slide.offsetLeft - slides[0].offsetLeft, Math.max(0, track.scrollWidth - track.clientWidth)));
+    function renderCaption(index) {
+      const item = items[index];
+      captionTitle.textContent = item.title;
+      captionBody.textContent = item.caption || "";
+      captionBody.hidden = !item.caption;
+      captionNote.hidden = kind !== "videos";
+      captionNote.textContent = kind !== "videos" ? "" : item.silent ? "무음 영상 · 재생 버튼을 눌러 시작하세요." : "재생 버튼을 눌러 시작하세요. 기본 음소거 · 자막 제공";
+      captionWarning.textContent = item.transcript ? "자막을 불러올 수 없습니다. 영상 내용 읽기를 이용하거나 잠시 후 다시 확인해 주세요." : "자막을 불러올 수 없습니다. 잠시 후 다시 확인해 주세요.";
+      captionWarning.hidden = !(kind === "videos" && failedCaptions.has(index));
+      captionLink.hidden = !item.transcript;
+      captionLink.href = item.transcript || "";
+    }
     function update(index) {
       current = clampIndex(index, items.length);
       position.textContent = `${String(current + 1).padStart(2, "0")} / ${String(items.length).padStart(2, "0")}`;
-      previous.setAttribute("aria-disabled", String(current === 0));
-      next.setAttribute("aria-disabled", String(current === items.length - 1));
+      renderCaption(current);
+      picks.forEach((pick, i) => {
+        pick.setAttribute("aria-current", String(i === current));
+        pick.tabIndex = i === current || items.length < 2 ? 0 : -1;
+      });
+      slides.forEach((slide, i) => slide.classList.toggle("is-current", i === current));
       videos.forEach((video, i) => {
         video.tabIndex = i === current ? 0 : -1;
         if (i !== current) video.pause();
@@ -188,8 +226,60 @@
       destination = null;
       update(closestIndex(track.scrollLeft, offsets()));
     }
-    previous.addEventListener("click", () => { if (current > 0) go(current - 1); });
-    next.addEventListener("click", () => { if (current < items.length - 1) go(current + 1); });
+    const indexAt = clientX => {
+      let best = 0;
+      let bestDistance = Infinity;
+      picks.forEach((pick, index) => {
+        if (typeof pick.getBoundingClientRect !== "function") return;
+        const rect = pick.getBoundingClientRect();
+        const distance = Math.abs(clientX - (rect.left + rect.width / 2));
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          best = index;
+        }
+      });
+      return best;
+    };
+    const endDrag = event => {
+      if (!drag || event.pointerId !== drag.id) return;
+      if (drag.moved) {
+        suppressClick = true;
+        win.setTimeout(() => { suppressClick = false; }, 0);
+      }
+      picker.classList.remove("is-grabbing");
+      drag = null;
+      win.removeEventListener?.("pointermove", onDragMove);
+      win.removeEventListener?.("pointerup", endDrag);
+      win.removeEventListener?.("pointercancel", endDrag);
+    };
+    const onDragMove = event => {
+      if (!drag || event.pointerId !== drag.id) return;
+      if (!drag.moved && Math.abs(event.clientX - drag.x) < 8) return;
+      drag.moved = true;
+      picker.classList.add("is-grabbing");
+      const index = indexAt(event.clientX);
+      if (index !== current) go(index);
+    };
+    picker.addEventListener("pointerdown", event => {
+      if (event.button !== 0 || items.length < 2) return;
+      drag = { id: event.pointerId, x: event.clientX, moved: false };
+      // Keep the click on the poster. Capturing the pointer would retarget that click.
+      win.addEventListener?.("pointermove", onDragMove);
+      win.addEventListener?.("pointerup", endDrag);
+      win.addEventListener?.("pointercancel", endDrag);
+    });
+    picker.addEventListener("pointermove", onDragMove);
+    picker.addEventListener("pointerup", endDrag);
+    picker.addEventListener("pointercancel", endDrag);
+    picker.addEventListener("keydown", event => {
+      if (!event.target?.classList?.contains("gallery-pick") || items.length < 2) return;
+      const target = { ArrowLeft: current - 1, ArrowRight: current + 1, Home: 0, End: items.length - 1 }[event.key];
+      if (target === undefined) return;
+      event.preventDefault();
+      const index = clampIndex(target, items.length);
+      go(index);
+      picks[index].focus?.();
+    });
     track.addEventListener("keydown", event => {
       // Native video controls and links keep their own keyboard behavior.
       if (event.target !== track || items.length < 2) return;
