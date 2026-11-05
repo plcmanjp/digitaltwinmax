@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f5f5f2">
-  <meta name="description" content="설비 3D 모델에 센서와 구동부를 할당하고 PLC 입출력을 연결하는 Windows 앱, 디지털트윈맥스. GLB/glTF 가져오기, 구동 값과 I/O 설정, 가상 실행부터 PLC 시험 준비까지 살펴보세요.">
+  <meta name="description" content="설비의 STEP 파일을 바로 불러와 센서와 구동부를 할당하고 PLC 입출력을 연결하는 Windows 앱, 디지털트윈맥스. 모델 가져오기부터 동작과 I/O 설정, 가상 실행과 PLC 시험 준비까지 살펴보세요.">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ko_KR">
   <meta property="og:title" content="디지털트윈맥스: 설비 모델에 PLC 신호를 연결하세요">
-  <meta property="og:description" content="설비 3D 모델에 센서와 구동부를 할당하고, 구동 값과 I/O 주소를 설정합니다. 실제 앱 화면과 MINI MPS 가상 실행 영상으로 사용 흐름을 살펴보세요.">
+  <meta property="og:description" content="설비의 STEP 파일을 바로 불러와 센서와 구동부를 할당하고, 구동 값과 I/O 주소를 설정합니다. 실제 앱 화면과 MINI MPS 가상 실행 영상으로 사용 흐름을 살펴보세요.">
   <meta property="og:url" content="https://plcmanjp.github.io/digitaltwinmax/">
   <link rel="canonical" href="https://plcmanjp.github.io/digitaltwinmax/">
   <link rel="icon" type="image/svg+xml" href="assets/mark.svg?v=brand-3">
@@ -39,7 +39,7 @@
           <a class="primary-link" href="#features">기능과 설정 보기</a>
           <a class="text-link" href="#trial">체험판 안내</a>
         </div>
-        <p class="hero-preparation">입력 형식은 GLB/glTF입니다. STEP 원본은 외부에서 변환한 뒤 가져옵니다.</p>
+        <p class="hero-preparation">정식 지원 모델 형식: STEP (.step, .stp)</p>
       </div>
       <figure class="hero-figure">
         <button type="button" class="zoom-frame" aria-haspopup="dialog">
@@ -51,7 +51,7 @@
     </section>
     <dl class="product-facts wrap" aria-label="제품 기본 정보">
       <div><dt>실행 환경</dt><dd>Windows 데스크톱</dd></div>
-      <div><dt>모델 준비</dt><dd>CAD에서 변환한 GLB/glTF</dd></div>
+      <div><dt>모델 가져오기</dt><dd>STEP 파일 바로 불러오기</dd></div>
       <div><dt>동작 구성</dt><dd>컴포넌트와 I/O 주소 설정</dd></div>
       <div><dt>시험 흐름</dt><dd>가상 실행에서 PLC 연동으로</dd></div>
     </dl>
@@ -65,16 +65,16 @@
           <li class="feature-row">
             <div class="feature-copy">
               <p class="feature-index">01</p>
-              <h3>설비 모델을 가져옵니다</h3>
-              <p>설계한 설비를 GLB/glTF로 가져와 부품 트리와 3D 화면에서 확인합니다. 구동할 오브젝트를 고르고, 설비 안에서 그 부품의 위치와 배치를 살펴봅니다.</p>
-              <p class="feature-detail">준비할 것: GLB/glTF 모델. STEP/STP는 외부 변환이 필요합니다.</p>
+              <h3>STEP 파일을 엽니다</h3>
+              <p>설계한 설비의 STEP 파일을 앱에서 바로 엽니다. 부품 트리와 3D 화면에서 구조를 확인하고, 구동할 부품과 센서를 배치할 위치를 선택합니다.</p>
+              <p class="feature-detail">지원 형식: STEP (.step, .stp)</p>
             </div>
             <figure>
               <button type="button" class="zoom-frame" aria-haspopup="dialog">
-                <img src="assets/feature-model-import.jpg" width="1552" height="1000" loading="lazy" alt="앱의 3D 모델 가져오기 창에서 conveyor.glb 파일을 선택한 화면. 파일 형식은 GLB와 glTF이며, 뒤에는 MINI MPS 샘플이 열려 있다.">
+                <img src="assets/film-select.jpg" width="1280" height="720" loading="lazy" alt="설비 모델을 연 뒤 부품 트리에서 Magazine을 선택한 화면. 3D의 매거진이 강조되고 오른쪽 속성에 위치 값이 보인다.">
                 <span class="sr-only">확대</span>
               </button>
-              <figcaption>3D 모델 가져오기에서 GLB/glTF 파일을 선택합니다. CAD 원본은 외부에서 이 형식으로 변환합니다.</figcaption>
+              <figcaption>모델을 불러온 뒤 부품 트리에서 부품을 찾고, 3D 화면과 속성을 함께 확인합니다.</figcaption>
             </figure>
           </li>
           <li class="feature-row is-flip">
@@ -118,7 +118,7 @@
           <p class="section-description">어느 부품이 어떤 신호에 반응하는지, 기계 설계와 PLC 제어를 같은 설비 화면에서 대조합니다.</p>
         </div>
         <dl class="benefit-list">
-          <div><dt>설계한 모델을 이어서 사용</dt><dd>기존 CAD에서 변환한 형상을 가져옵니다. 준비한 형상을 바탕으로 구동 대상과 센서, 입출력 관계를 구성합니다.</dd></div>
+          <div><dt>설계한 모델을 이어서 사용</dt><dd>설계한 설비의 STEP 파일을 가져옵니다. 불러온 모델을 바탕으로 구동 대상과 센서, 입출력 관계를 구성합니다.</dd></div>
           <div><dt>구동 조건은 속성 패널에서</dt><dd>앱의 구동 설정은 컴포넌트와 속성 패널에서 처리합니다. 실린더의 이동 거리와 밸브 주소처럼 엔지니어에게 익숙한 값으로 설정합니다.</dd></div>
           <div><dt>신호와 움직임을 함께 확인</dt><dd>I/O 주소를 부품의 동작과 연결합니다. 그 신호가 설비의 어느 부분에 대응하는지 3D 화면과 함께 살펴봅니다.</dd></div>
           <div><dt>PLC 연결 전부터 시작</dt><dd>모델과 컴포넌트를 준비한 뒤 가상 실행으로 먼저 확인합니다. PLC 제어 시험 단계에서는 통신 설정과 입출력 매핑을 이어서 다룹니다.</dd></div>
@@ -186,7 +186,7 @@
     <section class="faq wrap" id="faq" aria-labelledby="faq-title">
       <div class="section-heading"><div><p class="eyebrow">자주 묻는 질문</p><h2 id="faq-title">사용 전에 알아둘 것</h2></div></div>
       <div class="faq-list">
-        <details><summary>CAD 원본 파일을 바로 열 수 있나요?</summary><p>앱이 가져오는 형식은 GLB/glTF입니다. STEP/STP 같은 CAD 원본은 외부에서 변환한 뒤 가져와야 합니다. CAD 형상을 설계하거나 편집하는 작업은 기존 CAD 도구에서 진행합니다.</p></details>
+        <details><summary>어떤 설비 모델을 불러올 수 있나요?</summary><p>STEP 파일(.step, .stp)을 앱에서 바로 불러옵니다. CAD에서 준비한 설비 모델을 열고, 부품별로 동작과 신호 설정을 이어갑니다.</p></details>
         <details><summary>“코드리스”는 어느 작업을 뜻하나요?</summary><p>앱 안에서 센서와 구동부의 동작을 설정하기 위해 별도의 스크립트를 작성하지 않는다는 뜻입니다. 컴포넌트를 할당하고 속성 값과 I/O 주소를 입력합니다. PLC로 시험할 때 사용할 래더 등 제어 프로그램은 별도로 준비합니다.</p></details>
         <details><summary>PLC가 없어도 먼저 확인할 수 있나요?</summary><p>가상 실행과 신호 시뮬레이터로 설비의 움직임을 먼저 살펴볼 수 있습니다. 이 페이지의 MINI MPS 동작 영상도 실제 하드웨어 PLC에 연결하지 않은 모의 실행입니다.</p></details>
         <details><summary>PLC로 시험하려면 무엇이 필요한가요?</summary><p>시험할 PLC 제어 프로그램, 통신 환경, 센서와 구동부의 I/O 매핑을 준비합니다. 소개 화면의 MX Component 방식은 해당 통신 환경과 논리 국번 설정이 필요합니다. 배포판별 지원 환경과 이용 조건은 체험판 안내를 확인하세요.</p></details>
