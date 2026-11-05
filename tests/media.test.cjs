@@ -228,6 +228,11 @@ test('videos are user-controlled, inline, initially muted and not preloaded', ()
   assert.equal(track.kind, 'captions'); assert.equal(track.default, true); assert.equal(track.srclang, 'ko');
   assert.equal(f.section.querySelector('a').href, 'assets/description.txt');
 });
+test('videos without a transcript do not offer a separate reading page', () => {
+  const f = fixture();
+  mount(f.section, [video(1, { captions: '', silent: true })], 'videos');
+  assert.equal(f.section.querySelector('a'), null);
+});
 test('changing video slides pauses outgoing videos and transfers video tab focus eligibility', () => {
   const f = fixture(); const api = mount(f.section, [video(1), video(2)], 'videos');
   const [first, second] = f.section.querySelectorAll('video');

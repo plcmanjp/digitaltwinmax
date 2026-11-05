@@ -73,7 +73,7 @@
     captionWarning.setAttribute("role", "status");
     const captionLink = make("a", "", "영상 내용 읽기 ↗");
     captionCopy.append(captionTitle, captionBody, captionNote, captionWarning);
-    caption.append(captionCopy, captionLink);
+    caption.append(captionCopy);
     const slides = items.map((item, index) => {
       const slide = make("figure", "gallery-slide");
       slide.setAttribute("role", "group");
@@ -196,8 +196,13 @@
       captionNote.textContent = kind !== "videos" ? "" : item.silent ? "무음 영상 · 재생 버튼을 눌러 시작하세요." : "재생 버튼을 눌러 시작하세요. 기본 음소거 · 자막 제공";
       captionWarning.textContent = item.transcript ? "자막을 불러올 수 없습니다. 영상 내용 읽기를 이용하거나 잠시 후 다시 확인해 주세요." : "자막을 불러올 수 없습니다. 잠시 후 다시 확인해 주세요.";
       captionWarning.hidden = !(kind === "videos" && failedCaptions.has(index));
-      captionLink.hidden = !item.transcript;
-      captionLink.href = item.transcript || "";
+      if (item.transcript) {
+        captionLink.hidden = false;
+        captionLink.href = item.transcript;
+        if ((captionLink.parentElement || captionLink.parent) !== caption) caption.append(captionLink);
+      } else {
+        captionLink.remove?.();
+      }
     }
     function update(index) {
       current = clampIndex(index, items.length);

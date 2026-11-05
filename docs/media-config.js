@@ -48,32 +48,28 @@ window.DTM_MEDIA = {
       poster: "assets/film-process.jpg",
       title: "전체 공정과 신호",
       caption: "샘플 공정을 가상으로 재생하면 아래 신호 시뮬레이터의 값이 함께 바뀝니다. 화면의 PLC는 모의 상태이며 실제 장비에는 연결하지 않았습니다.",
-      silent: true,
-      transcript: "assets/film-process.txt"
+      silent: true
     },
     {
       src: "assets/film-feed.mp4",
       poster: "assets/film-feed.jpg",
       title: "공급 매거진",
       caption: "공급 매거진을 가까이서 본 가상 실행입니다. 적재물이 매거진에서 나와 컨베이어로 넘어갑니다.",
-      silent: true,
-      transcript: "assets/film-feed.txt"
+      silent: true
     },
     {
       src: "assets/film-place.mp4",
       poster: "assets/film-place.jpg",
       title: "이송과 적재",
       caption: "이송부를 가까이서 본 가상 실행입니다. 제품이 적재함과 배출 쪽으로 옮겨집니다.",
-      silent: true,
-      transcript: "assets/film-place.txt"
+      silent: true
     },
     {
       src: "assets/film-select.mp4",
       poster: "assets/film-select.jpg",
       title: "부품 선택",
       caption: "부품 트리에서 고르면 3D에서 그 묶음이 강조되고 오른쪽 속성이 따라옵니다.",
-      silent: true,
-      transcript: "assets/film-select.txt"
+      silent: true
     }
   ]
 };
