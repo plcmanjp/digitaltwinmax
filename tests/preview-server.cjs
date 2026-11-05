@@ -7,11 +7,14 @@ const { mediaCases, fixtureSVG } = require('./media-fixtures.cjs');
 const root = path.resolve(__dirname, '../docs');
 const releaseCases = [...Object.keys(cases), 'rate-limit', 'offline', 'http-error'];
 const allowedCases = [...releaseCases, ...Object.keys(mediaCases)];
-const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.vtt': 'text/vtt', '.mp4': 'video/mp4' };
+const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.avif': 'image/avif', '.vtt': 'text/vtt', '.mp4': 'video/mp4' };
 http.createServer((req, res) => {
   const url = new URL(req.url, 'http://127.0.0.1:4173');
   const headers = { 'Cache-Control': 'no-store' };
-  const send = (body, type = 'text/javascript') => res.writeHead(200, { ...headers, 'Content-Type': `${type}; charset=utf-8` }).end(body);
+  const send = (body, type = 'text/javascript') => {
+    const contentType = type.startsWith('image/') || type.startsWith('video/') ? type : `${type}; charset=utf-8`;
+    res.writeHead(200, { ...headers, 'Content-Type': contentType }).end(body);
+  };
   if (url.pathname === '/test-fixture.js') {
     const name = url.searchParams.get('case');
     if (!allowedCases.includes(name)) { res.writeHead(404).end(); return; }
