@@ -30,7 +30,7 @@
         const item = make("li", "trial-file");
         const info = make("div", "trial-file-info");
         const kind = asset.format === "zip" ? "압축 패키지" : "설치 파일";
-        info.append(make("span", "trial-file-platform", `Windows ${asset.arch} · ${kind} ${asset.format.toUpperCase()} · ${sizeLabel(asset.size)}`));
+        info.append(make("span", "trial-file-platform", `Windows ${asset.arch} / ${kind} ${asset.format.toUpperCase()} (${sizeLabel(asset.size)})`));
         info.append(make("span", "trial-file-name", asset.name));
         const link = make("a", "trial-download", "다운로드 ↓");
         link.href = asset.url;

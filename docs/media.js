@@ -193,7 +193,7 @@
       captionBody.textContent = item.caption || "";
       captionBody.hidden = !item.caption;
       captionNote.hidden = kind !== "videos";
-      captionNote.textContent = kind !== "videos" ? "" : item.silent ? "무음 영상 · 재생 버튼을 눌러 시작하세요." : "재생 버튼을 눌러 시작하세요. 기본 음소거 · 자막 제공";
+      captionNote.textContent = kind !== "videos" ? "" : item.silent ? "무음 영상입니다. 재생 버튼을 눌러 시작하세요." : "기본 음소거이며 자막을 제공합니다. 재생 버튼을 눌러 시작하세요.";
       captionWarning.textContent = item.transcript ? "자막을 불러올 수 없습니다. 영상 내용 읽기를 이용하거나 잠시 후 다시 확인해 주세요." : "자막을 불러올 수 없습니다. 잠시 후 다시 확인해 주세요.";
       captionWarning.hidden = !(kind === "videos" && failedCaptions.has(index));
       if (item.transcript) {
