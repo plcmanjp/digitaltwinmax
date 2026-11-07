@@ -7,7 +7,7 @@ window.DTM_MEDIA = {
   images: [
     {
       src: "assets/app-scene-iso.jpg",
-      alt: "factory01 등각 시점. 3D 뷰포트 가운데에 컨베이어, 신호등, 매거진이 있는 샘플 설비가 보인다.",
+      alt: "MINI MPS 샘플의 등각 시점. 3D 뷰포트 가운데에 컨베이어, 신호등, 매거진이 있는 샘플 설비가 보인다.",
       title: "등각 시점",
       caption: "샘플 설비를 연 편집 화면입니다."
     },
