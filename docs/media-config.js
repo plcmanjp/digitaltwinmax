@@ -47,7 +47,7 @@ window.DTM_MEDIA = {
       src: "assets/film-process.mp4",
       poster: "assets/film-process.jpg",
       title: "전체 공정과 신호",
-      caption: "샘플 공정을 가상으로 재생하면 아래 신호 시뮬레이터의 값이 함께 바뀝니다. 화면의 PLC는 모의 상태이며 실제 장비에는 연결하지 않았습니다.",
+      caption: "샘플 공정을 가상으로 재생하면 아래 신호 시뮬레이터의 값이 함께 바뀝니다.",
       silent: true
     },
     {

@@ -1556,3 +1556,136 @@ button {
 .hero-description,.hero-preparation {
   word-break:keep-all;
 }
+.capability-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  column-gap:48px;
+  margin:0;
+}
+.capability-grid>div {
+  padding:24px 0;
+  border-top:1px solid var(--line);
+  min-width:0;
+}
+.capability-grid dt {
+  font-size:20px;
+  font-weight:600;
+  letter-spacing:-.04em;
+}
+.capability-grid dd {
+  margin:8px 0 0;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.7;
+  word-break:keep-all;
+}
+@media(max-width:1100px) {
+  .capability-grid {
+    grid-template-columns:1fr 1fr;
+  }
+}
+@media(max-width:700px) {
+  .capability-grid {
+    grid-template-columns:1fr;
+  }
+  .capability-grid>div {
+    padding:16px 0;
+  }
+  .capability-grid dt {
+    font-size:18px;
+  }
+}
+.signal-loop {
+  display:grid;
+  grid-template-columns:minmax(150px,1fr) minmax(220px,1.6fr) minmax(150px,1fr);
+  align-items:stretch;
+  margin-top:24px;
+}
+.signal-node {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:24px;
+  background:var(--paper);
+  border:1px solid #c4cec0;
+}
+.signal-node strong {
+  word-break:keep-all;
+  font-size:24px;
+  font-weight:600;
+  letter-spacing:-.04em;
+}
+.signal-node small {
+  margin-top:6px;
+  color:#505a50;
+  font-size:13px;
+  line-height:1.6;
+}
+.signal-links {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:26px;
+  padding:0 24px;
+}
+.signal-link {
+  display:grid;
+  gap:8px;
+  margin:0;
+}
+.signal-text {
+  text-align:center;
+  color:#3b463d;
+  font-size:14px;
+  line-height:1.5;
+  word-break:keep-all;
+}
+.signal-text strong {
+  color:var(--ink);
+  font-weight:600;
+}
+.signal-line {
+  position:relative;
+  height:2px;
+  background:#42674c;
+}
+.signal-line::after {
+  content:"";
+  position:absolute;
+  top:-5px;
+  border-top:6px solid transparent;
+  border-bottom:6px solid transparent;
+}
+.is-out .signal-line::after {
+  right:-1px;
+  border-left:11px solid #42674c;
+}
+.is-in .signal-line::after {
+  left:-1px;
+  border-right:11px solid #42674c;
+}
+@media(max-width:700px) {
+  .signal-loop {
+    grid-template-columns:.9fr 1.5fr .9fr;
+  }
+  .signal-text strong {
+    display:block;
+  }
+  .signal-node {
+    padding:14px 10px;
+    text-align:center;
+  }
+  .signal-node strong {
+    font-size:16px;
+  }
+  .signal-node small {
+    font-size:11px;
+  }
+  .signal-links {
+    padding:0 8px;
+    gap:18px;
+  }
+  .signal-text {
+    font-size:12px;
+  }
+}
