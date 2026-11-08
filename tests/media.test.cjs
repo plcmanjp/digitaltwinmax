@@ -92,6 +92,7 @@ class Element {
   pause() { const wasPlaying = !this.paused; this.paused = true; this.pauseCount++; if (wasPlaying) this.emit('pause'); }
   play() { this.paused = false; this.playCount++; this.emit('play'); return Promise.resolve(); }
   scrollIntoView(options) { this.scrollCalls.push(options); }
+  requestFullscreen() { this.ownerDocument.fullscreenElement = this; this.ownerDocument.emit('fullscreenchange'); return Promise.resolve(); }
   scrollTo(options) { this.scrollCalls.push(options); this.scrollLeft = options.left; }
 }
 function fixture({ reduced = false } = {}) {
@@ -99,6 +100,9 @@ function fixture({ reduced = false } = {}) {
   const win = { listeners: {}, matchMedia: () => ({ matches: reduced }), setTimeout: fn => { timers.set(++id, fn); return id; }, clearTimeout: n => timers.delete(n), requestAnimationFrame: fn => { frames.set(++id, fn); return id; }, addEventListener(name, fn) { (this.listeners[name] ||= []).push(fn); }, emit(name) { (this.listeners[name] || []).forEach(fn => fn()); }, IntersectionObserver: class { constructor(callback) { this.callback = callback; this.targets = []; observers.push(this); } observe(target) { this.targets.push(target); } }, ResizeObserver: class { constructor(callback) { this.callback = callback; resizeObservers.push(this); } observe(target) { this.target = target; } } };
   const doc = { defaultView: win, hidden: false, listeners: {}, createElement(tag) { return new Element(tag, this); }, addEventListener(name, fn) { (this.listeners[name] ||= []).push(fn); }, emit(name) { (this.listeners[name] || []).forEach(fn => fn()); } };
   doc.documentElement = doc.createElement('html');
+  doc.fullscreenElement = null;
+  doc.exitCalls = 0;
+  doc.exitFullscreen = function () { this.exitCalls++; this.fullscreenElement = null; this.emit('fullscreenchange'); return Promise.resolve(); };
   const section = doc.createElement('section'); section.id = 'test-media';
   const gallery = doc.createElement('div'); gallery.className = 'gallery'; gallery.hidden = true;
   const empty = doc.createElement('p'); empty.className = 'media-empty';
@@ -371,4 +375,39 @@ test('the hero promo replaces native controls and shares the single-player rule 
   f.see(hero, 1); assert.equal(hero.paused, false);
   f.observers[0].callback([{ target: hero, intersectionRatio: 0.1 }, { target: api.cards[0].video, intersectionRatio: 1 }]);
   assert.equal(hero.paused, true); assert.equal(api.cards[0].video.paused, false);
+});
+test('fullscreen shows the whole stage, starts playback and exits from the same button', () => {
+  const f = feedFixture(); const api = mountFeed(f.section, [silentVideo(1)]);
+  const media = api.cards[0].video;
+  const stage = f.section.querySelector('.feed-stage');
+  const full = f.section.querySelector('.video-fullscreen');
+  assert.equal(full.hidden, false);
+  assert.equal(full.getAttribute('aria-label'), '합성 테스트 영상 1 전체 화면');
+  full.emit('click');
+  assert.equal(f.doc.fullscreenElement, stage);
+  assert.equal(media.paused, false);
+  assert.equal(stage.classList.contains('is-fullscreen'), true);
+  assert.equal(full.getAttribute('aria-label'), '합성 테스트 영상 1 전체 화면 종료');
+  full.emit('click');
+  assert.equal(f.doc.exitCalls, 1);
+  assert.equal(f.doc.fullscreenElement, null);
+  assert.equal(stage.classList.contains('is-fullscreen'), false);
+  assert.equal(full.getAttribute('aria-label'), '합성 테스트 영상 1 전체 화면');
+});
+test('without stage fullscreen, iPhone-style native video fullscreen is used, otherwise the button hides', () => {
+  const f = feedFixture();
+  const stage = f.doc.createElement('div'); stage.requestFullscreen = undefined;
+  const hero = f.doc.createElement('video'); hero.setAttribute('aria-label', '홍보 영상');
+  let native = 0; hero.webkitEnterFullscreen = () => { native++; };
+  stage.append(hero); hero.parentElement = stage;
+  enhance(hero);
+  const full = stage.querySelector('.video-fullscreen');
+  assert.equal(full.hidden, false);
+  full.emit('click');
+  assert.equal(native, 1); assert.equal(hero.paused, false);
+  const g = feedFixture();
+  const bare = g.doc.createElement('div'); bare.requestFullscreen = undefined;
+  const plain = g.doc.createElement('video'); bare.append(plain); plain.parentElement = bare;
+  enhance(plain);
+  assert.equal(bare.querySelector('.video-fullscreen').hidden, true);
 });

@@ -433,9 +433,50 @@
     });
     button.addEventListener("click", () => controller.toggle(video));
     video.addEventListener("click", () => controller.toggle(video));
-    stage.append(button, progress);
+    const full = attachFullscreen(video, stage, controller, label);
+    stage.append(button, full, progress);
     sync();
     return button;
+  }
+  // Fullscreen the whole stage so the play button and progress bar stay
+  // available. iPhone Safari only supports native video fullscreen.
+  function attachFullscreen(video, stage, controller, label) {
+    const doc = video.ownerDocument;
+    const full = doc.createElement("button");
+    full.type = "button";
+    full.className = "video-fullscreen";
+    const icon = doc.createElement("span");
+    icon.className = "video-fullscreen-icon";
+    icon.setAttribute("aria-hidden", "true");
+    full.append(icon);
+    const request = stage.requestFullscreen || stage.webkitRequestFullscreen;
+    const canStage = typeof request === "function" && doc.fullscreenEnabled !== false;
+    const canVideo = typeof video.webkitEnterFullscreen === "function";
+    full.hidden = !canStage && !canVideo;
+    const current = () => doc.fullscreenElement || doc.webkitFullscreenElement || null;
+    const sync = () => {
+      const active = current() === stage;
+      full.setAttribute("aria-label", `${label} ${active ? "전체 화면 종료" : "전체 화면"}`);
+      stage.classList.toggle("is-fullscreen", active);
+    };
+    full.addEventListener("click", () => {
+      if (current() === stage) {
+        const exit = doc.exitFullscreen || doc.webkitExitFullscreen;
+        exit?.call(doc);
+        return;
+      }
+      if (video.paused) controller.toggle(video);
+      if (canStage) {
+        const result = request.call(stage);
+        if (result && typeof result.catch === "function") result.catch(() => {});
+      } else if (canVideo) {
+        try { video.webkitEnterFullscreen(); } catch { /* metadata not ready */ }
+      }
+    });
+    doc.addEventListener("fullscreenchange", sync);
+    doc.addEventListener("webkitfullscreenchange", sync);
+    sync();
+    return full;
   }
   function prepareInline(video) {
     video.controls = false;

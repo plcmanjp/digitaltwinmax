@@ -2046,3 +2046,60 @@ button {
     gap:16px;
   }
 }
+.video-fullscreen {
+  position:absolute;
+  right:14px;
+  bottom:16px;
+  width:40px;
+  height:40px;
+  padding:0;
+  border:0;
+  border-radius:50%;
+  background:rgba(17,18,17,.72);
+  color:#fff;
+  display:grid;
+  place-items:center;
+  opacity:.85;
+  transition:opacity .2s ease;
+}
+.video-fullscreen:hover,.video-fullscreen:focus-visible {
+  opacity:1;
+}
+.video-fullscreen:focus-visible {
+  outline:2px solid #fff;
+  outline-offset:4px;
+}
+.video-fullscreen-icon {
+  width:16px;
+  height:16px;
+  background:
+    linear-gradient(currentColor,currentColor) left top/6px 2px no-repeat,
+    linear-gradient(currentColor,currentColor) left top/2px 6px no-repeat,
+    linear-gradient(currentColor,currentColor) right top/6px 2px no-repeat,
+    linear-gradient(currentColor,currentColor) right top/2px 6px no-repeat,
+    linear-gradient(currentColor,currentColor) left bottom/6px 2px no-repeat,
+    linear-gradient(currentColor,currentColor) left bottom/2px 6px no-repeat,
+    linear-gradient(currentColor,currentColor) right bottom/6px 2px no-repeat,
+    linear-gradient(currentColor,currentColor) right bottom/2px 6px no-repeat;
+}
+.is-fullscreen .video-fullscreen-icon {
+  width:12px;
+  height:12px;
+}
+.promo-stage:fullscreen,.feed-stage:fullscreen {
+  width:100%;
+  height:100%;
+  aspect-ratio:auto;
+  margin:0;
+  background:#000;
+}
+.promo-stage:-webkit-full-screen,.feed-stage:-webkit-full-screen {
+  width:100%;
+  height:100%;
+  aspect-ratio:auto;
+  margin:0;
+  background:#000;
+}
+.is-fullscreen video {
+  background:#000;
+}
