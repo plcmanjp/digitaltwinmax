@@ -318,5 +318,228 @@
     update(0);
     return { go, track, slides, get index() { return current; } };
   }
-  return { localAsset, normalizeItems, clampIndex, closestIndex, mount };
+  // One controller per document: the most visible video (at least 60%) plays,
+  // every other video pauses. Reduced motion disables automatic playback.
+  const controllers = new WeakMap();
+  const PLAY_RATIO = .6;
+  function autoplayController(doc) {
+    if (controllers.has(doc)) return controllers.get(doc);
+    const win = doc.defaultView;
+    const states = new Map();
+    let active = null;
+    const reduced = () => Boolean(win.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
+    const start = video => {
+      const result = video.play?.();
+      if (result && typeof result.catch === "function") result.catch(() => {});
+    };
+    function choose() {
+      let best = null;
+      let bestRatio = 0;
+      states.forEach((state, video) => {
+        if (state.ratio >= PLAY_RATIO && state.ratio > bestRatio) {
+          best = video;
+          bestRatio = state.ratio;
+        }
+      });
+      return best;
+    }
+    function refresh() {
+      const next = doc.hidden ? null : choose();
+      if (next !== active) {
+        active?.pause();
+        active = next;
+        const state = active && states.get(active);
+        if (state?.left) {
+          state.left = false;
+          try { active.currentTime = 0; } catch { /* metadata not loaded yet */ }
+        }
+      }
+      states.forEach((state, video) => { if (video !== active && !video.paused) video.pause(); });
+      if (active && active.paused && !states.get(active).userPaused && !reduced()) start(active);
+    }
+    const observer = win.IntersectionObserver ? new win.IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const state = states.get(entry.target);
+        if (!state) return;
+        state.ratio = Number(entry.intersectionRatio) || 0;
+        if (state.ratio === 0) {
+          state.left = true;
+          state.userPaused = false;
+        }
+      });
+      refresh();
+    }, { threshold: [0, .25, .5, PLAY_RATIO, .75, .9, 1] }) : null;
+    const nearby = win.IntersectionObserver ? new win.IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.intersectionRatio > 0 || entry.isIntersecting) entry.target.preload = "auto";
+      });
+    }, { rootMargin: "0px 0px 100% 0px" }) : null;
+    doc.addEventListener("visibilitychange", refresh);
+    win.addEventListener("pagehide", () => states.forEach((state, video) => video.pause()));
+    const api = {
+      observe(video) {
+        states.set(video, { ratio: 0, left: false, userPaused: false });
+        video.addEventListener("play", () => {
+          if (active && active !== video) active.pause();
+          active = video;
+        });
+        observer?.observe(video);
+        nearby?.observe(video);
+      },
+      toggle(video) {
+        const state = states.get(video);
+        if (!state) return;
+        if (video.paused) {
+          state.userPaused = false;
+          if (active && active !== video) active.pause();
+          active = video;
+          start(video);
+        } else {
+          state.userPaused = true;
+          video.pause();
+        }
+      },
+      refresh,
+      get active() { return active; }
+    };
+    controllers.set(doc, api);
+    return api;
+  }
+  function attachControls(video, stage, controller, label) {
+    const doc = video.ownerDocument;
+    const button = doc.createElement("button");
+    button.type = "button";
+    button.className = "video-toggle";
+    const icon = doc.createElement("span");
+    icon.className = "video-toggle-icon";
+    icon.setAttribute("aria-hidden", "true");
+    button.append(icon);
+    const progress = doc.createElement("span");
+    progress.className = "video-progress";
+    progress.setAttribute("aria-hidden", "true");
+    const bar = doc.createElement("span");
+    progress.append(bar);
+    const sync = () => {
+      const playing = !video.paused;
+      button.setAttribute("aria-label", `${label} ${playing ? "일시정지" : "재생"}`);
+      stage.classList.toggle("is-playing", playing);
+    };
+    video.addEventListener("play", sync);
+    video.addEventListener("pause", sync);
+    video.addEventListener("timeupdate", () => {
+      const duration = Number(video.duration);
+      const ratio = duration > 0 ? Math.min(1, Math.max(0, video.currentTime / duration)) : 0;
+      if (bar.style) bar.style.transform = `scaleX(${ratio})`;
+    });
+    button.addEventListener("click", () => controller.toggle(video));
+    video.addEventListener("click", () => controller.toggle(video));
+    stage.append(button, progress);
+    sync();
+    return button;
+  }
+  function prepareInline(video) {
+    video.controls = false;
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.loop = true;
+  }
+  // Static hero video: native controls stay for no-JS visitors and are
+  // replaced by the shared play/pause button once the controller is ready.
+  function enhance(video, label) {
+    if (!video || !video.parentElement) return null;
+    const controller = autoplayController(video.ownerDocument);
+    prepareInline(video);
+    const button = attachControls(video, video.parentElement, controller, label || video.getAttribute("aria-label") || "영상");
+    controller.observe(video);
+    return { video, button, controller };
+  }
+  // Vertical short-form feed: each scene fills the screen, plays when it is
+  // mostly visible and loops until the visitor scrolls to the next scene.
+  function mountFeed(section, input) {
+    const items = normalizeItems(input, "videos");
+    const feed = section.querySelector(".feed");
+    const empty = section.querySelector(".media-empty");
+    if (!feed || !items.length) return null;
+    const doc = section.ownerDocument;
+    const win = doc.defaultView;
+    const controller = autoplayController(doc);
+    const make = (tag, cls, value) => {
+      const node = doc.createElement(tag);
+      if (cls) node.className = cls;
+      if (value) node.textContent = value;
+      return node;
+    };
+    const pad = value => String(value).padStart(2, "0");
+    const total = items.length;
+    const cards = items.map((item, index) => {
+      const card = make("article", "feed-item");
+      card.id = `${section.id}-scene-${index + 1}`;
+      card.setAttribute("aria-label", `${total}개 중 ${index + 1}: ${item.title}`);
+      const stage = make("div", "feed-stage");
+      const video = make("video");
+      prepareInline(video);
+      video.preload = "none";
+      video.poster = item.poster;
+      video.setAttribute("aria-label", item.title);
+      if (item.captions) {
+        const captions = make("track");
+        captions.kind = "captions";
+        captions.src = item.captions;
+        captions.srclang = item.language;
+        captions.label = item.captionLabel;
+        captions.default = true;
+        video.append(captions);
+      }
+      const failure = make("div", "media-failure");
+      failure.hidden = true;
+      failure.setAttribute("role", "status");
+      failure.append(make("strong", "", "영상을 불러올 수 없습니다."), make("span", "", "잠시 후 페이지를 새로고침해 주세요."));
+      video.addEventListener("error", () => {
+        video.pause();
+        card.classList.add("media-error");
+        failure.hidden = false;
+      }, { once: true });
+      video.src = item.src;
+      stage.append(video, failure);
+      const toggle = attachControls(video, stage, controller, item.title);
+      const info = make("div", "feed-info");
+      const copy = make("div", "feed-copy");
+      copy.append(make("span", "feed-count", `${pad(index + 1)} / ${pad(total)}`), make("h3", "feed-title", item.title));
+      if (item.caption) copy.append(make("p", "feed-caption", item.caption));
+      if (item.transcript) {
+        const link = make("a", "feed-transcript", "영상 내용 읽기 ↗");
+        link.href = item.transcript;
+        copy.append(link);
+      }
+      info.append(copy);
+      let next = null;
+      if (index < total - 1) {
+        next = make("button", "feed-next");
+        next.type = "button";
+        next.setAttribute("aria-controls", `${section.id}-scene-${index + 2}`);
+        const arrow = make("span", "feed-next-arrow", "↓");
+        arrow.setAttribute("aria-hidden", "true");
+        next.append(make("span", "", "다음 영상"), arrow);
+        next.addEventListener("click", () => go(index + 1));
+        info.append(next);
+      }
+      card.append(stage, info);
+      controller.observe(video);
+      return { card, video, toggle, next };
+    });
+    function go(index) {
+      const target = cards[clampIndex(index, total)];
+      const reduced = win.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+      target.card.scrollIntoView?.({ behavior: reduced ? "auto" : "smooth", block: "center" });
+      target.toggle.focus?.({ preventScroll: true });
+    }
+    feed.append(...cards.map(entry => entry.card));
+    feed.hidden = false;
+    if (empty) empty.hidden = true;
+    section.classList.add("has-media", "has-feed");
+    doc.documentElement?.classList.add("feed-snap");
+    return { feed, cards, go, controller };
+  }
+  return { localAsset, normalizeItems, clampIndex, closestIndex, mount, mountFeed, enhance, autoplayController };
 });
