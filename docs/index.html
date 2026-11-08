@@ -22,7 +22,7 @@
   <meta name="twitter:image" content="https://plcmanjp.github.io/digitaltwinmax/assets/og-image.jpg?v=2">
   <link rel="canonical" href="https://plcmanjp.github.io/digitaltwinmax/">
   <link rel="icon" type="image/svg+xml" href="assets/mark.svg?v=brand-3">
-  <link rel="stylesheet" href="styles.css?v=feed-2">
+  <link rel="stylesheet" href="styles.css?v=feed-3">
   <script src="media-config.js?v=promo-7" defer></script>
   <script src="media.js?v=feed-1" defer></script>
   <script src="viewer.js?v=promo-4" defer></script>
@@ -72,6 +72,19 @@
           <div><dt><span class="cap-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 4 L12.5 4 C13.328 4 14 4.672 14 5.5 L14 18.5 C14 19.328 13.328 20 12.5 20 L4.5 20 C3.672 20 3 19.328 3 18.5 L3 5.5 C3 4.672 3.672 4 4.5 4 Z"/><line x1="6.5" y1="8" x2="10.5" y2="8"/><line x1="6.5" y1="12" x2="10.5" y2="12"/><line x1="6.5" y1="16" x2="10.5" y2="16"/><line x1="14" y1="12" x2="18" y2="12"/><path d="M18.5 9.5 L20.5 9.5 C20.776 9.5 21 9.724 21 10 L21 14 C21 14.276 20.776 14.5 20.5 14.5 L18.5 14.5 C18.224 14.5 18 14.276 18 14 L18 10 C18 9.724 18.224 9.5 18.5 9.5 Z"/></svg></span>미쓰비시 PLC 연결</dt><dd>MX Component로 GX Simulator2와 Q 시리즈에 연결합니다.</dd></div>
           <div><dt><span class="cap-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3 L16 3 L21 8 L21 19 C21 20.105 20.105 21 19 21 L5 21 C3.895 21 3 20.105 3 19 L3 5 C3 3.895 3.895 3 5 3 Z"/><polyline points="7,3 7,8 15,8 15,3"/><polyline points="7,21 7,14 17,14 17,21"/></svg></span>저장과 다시 열기</dt><dd>설정한 프로젝트를 저장해 다음 검토에 다시 씁니다.</dd></div>
         </dl>
+        <div class="agent-link" role="group" aria-labelledby="agent-link-title">
+          <div class="agent-copy">
+            <span class="cap-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 4 L19.5 4 C20.328 4 21 4.672 21 5.5 L21 14.5 C21 15.328 20.328 16 19.5 16 L11 16 L6 20 L6 16 L4.5 16 C3.672 16 3 15.328 3 14.5 L3 5.5 C3 4.672 3.672 4 4.5 4 Z"/><circle cx="8.5" cy="10" r="1"/><circle cx="12" cy="10" r="1"/><circle cx="15.5" cy="10" r="1"/></svg></span>
+            <h3 id="agent-link-title">AI 에이전트 연동(MCP)</h3>
+            <p>MCP를 지원하는 외부 AI 에이전트가 설비 구성과 PLC 신호를 읽습니다. 앱이 바뀌는 일은 사람이 승인한 경우로 한정합니다.</p>
+          </div>
+          <ol class="agent-steps">
+            <li><strong>읽기</strong><span>부품, 컴포넌트, PLC 신호 목록과 주소 할당 상태를 에이전트가 조회합니다.</span></li>
+            <li><strong>편집안 제안</strong><span>컴포넌트 추가나 PLC 주소 할당 같은 편집안을 에이전트가 정리합니다(개발 중).</span></li>
+            <li><strong>앱에서 승인</strong><span>사람이 앱에서 편집안을 확인하고 승인해야 적용됩니다(개발 중).</span></li>
+          </ol>
+          <p class="agent-note">앱 안에 챗봇은 없습니다. 에이전트는 실제 PLC를 제어하거나 코드를 실행하지 않으며, CAD 원본도 고치지 않습니다. 현재 체험판에는 포함되지 않습니다.</p>
+        </div>
         <div class="signal-flow" role="group" aria-labelledby="signal-flow-title">
           <h3 id="signal-flow-title">PLC와 디지털트윈맥스가 주고받는 것</h3>
           <div class="signal-loop">
@@ -177,6 +190,7 @@
         <details><summary>어떤 설비 모델을 불러올 수 있나요?</summary><p>제품판은 STEP 파일(.step, .stp)을 바로 불러옵니다. 체험판은 내장된 MINI MPS 교육 장비를 제공합니다.</p></details>
         <details><summary>“코드리스”는 어느 작업을 뜻하나요?</summary><p>센서와 구동부의 동작을 스크립트 없이 컴포넌트와 속성 값으로 설정한다는 뜻입니다. 래더 등 PLC 제어 프로그램은 별도로 준비합니다.</p></details>
         <details><summary>PLC가 없어도 먼저 확인할 수 있나요?</summary><p>네. 가상 실행과 신호 시뮬레이터로 설비의 움직임을 먼저 볼 수 있습니다.</p></details>
+        <details><summary>AI 에이전트와 함께 쓸 수 있나요?</summary><p>MCP를 지원하는 외부 AI 에이전트가 설비 구성과 PLC 신호를 조회할 수 있습니다. 에이전트가 낸 편집안을 앱에서 사람이 승인해 적용하는 기능은 개발 중입니다. 현재 체험판에는 포함되지 않습니다.</p></details>
         <details><summary>PLC로 시험하려면 무엇이 필요한가요?</summary><p>PLC 제어 프로그램, 통신 환경, 센서와 구동부의 I/O 매핑이 필요합니다. 체험판은 I/O 매핑이 미리 설정되어 있어 래더와 통신 설정만 준비하면 됩니다.</p></details>
         <details><summary>체험판에 샘플 래더가 들어 있나요?</summary><p>들어 있지 않습니다. GX Works2에서 직접 작성한 래더로 MINI MPS를 시운전해 보는 것이 체험의 목적입니다.</p></details>
       </div>
