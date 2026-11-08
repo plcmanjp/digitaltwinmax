@@ -1664,28 +1664,71 @@ button {
   left:-1px;
   border-right:11px solid #42674c;
 }
+@media(max-width:1100px) {
+  .signal-loop {
+    grid-template-columns:1fr 1.1fr 1fr;
+  }
+  .signal-node {
+    padding:18px;
+  }
+  .signal-node strong {
+    font-size:20px;
+  }
+  .signal-links {
+    padding:0 16px;
+  }
+}
 @media(max-width:700px) {
   .signal-loop {
-    grid-template-columns:.9fr 1.5fr .9fr;
+    grid-template-columns:1fr;
+  }
+  .signal-node {
+    padding:14px 16px;
+    text-align:center;
+  }
+  .signal-node strong {
+    font-size:19px;
+  }
+  .signal-node small {
+    font-size:12px;
+  }
+  .signal-links {
+    flex-direction:row;
+    justify-content:center;
+    gap:28px;
+    padding:14px 0;
+  }
+  .signal-link {
+    grid-template-columns:auto auto;
+    align-items:center;
+    gap:10px;
+  }
+  .signal-text {
+    text-align:left;
+    font-size:12px;
   }
   .signal-text strong {
     display:block;
   }
-  .signal-node {
-    padding:14px 10px;
-    text-align:center;
+  .signal-line {
+    width:2px;
+    height:46px;
   }
-  .signal-node strong {
-    font-size:16px;
+  .is-out .signal-line::after,.is-in .signal-line::after {
+    left:-5px;
+    right:auto;
+    border-left:6px solid transparent;
+    border-right:6px solid transparent;
   }
-  .signal-node small {
-    font-size:11px;
+  .is-out .signal-line::after {
+    top:auto;
+    bottom:-1px;
+    border-top:11px solid #42674c;
+    border-bottom:0;
   }
-  .signal-links {
-    padding:0 8px;
-    gap:18px;
-  }
-  .signal-text {
-    font-size:12px;
+  .is-in .signal-line::after {
+    top:-1px;
+    border-bottom:11px solid #42674c;
+    border-top:0;
   }
 }
