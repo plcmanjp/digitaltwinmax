@@ -518,6 +518,28 @@ button {
   word-break:keep-all;
   overflow-wrap:anywhere;
 }
+.trial-notify {
+  max-width:56ch;
+  margin-top:20px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.85;
+}
+.trial-notify strong {
+  color:var(--ink);
+  font-weight:600;
+}
+.trial-notify ul {
+  margin:6px 0 0;
+  padding-left:18px;
+}
+.trial-notify a {
+  color:var(--ink);
+  text-decoration:underline;
+  text-underline-offset:4px;
+}
 .trial-actions {
   display:flex;
   justify-content:space-between;

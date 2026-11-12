@@ -7,6 +7,10 @@
   const message = document.getElementById("trial-message");
   const detail = document.getElementById("trial-detail");
   const retry = document.getElementById("trial-retry");
+  const notify = document.getElementById("trial-notify");
+  const lead = document.getElementById("trial-lead");
+  const heroLink = document.getElementById("hero-trial-link");
+  const leadText = lead ? lead.textContent : "";
   let loading = false;
   const make = (tag, className, text) => {
     const element = document.createElement(tag);
@@ -62,6 +66,9 @@
     panel.setAttribute("aria-busy", "true");
     detail.replaceChildren();
     detail.hidden = true;
+    if (notify) notify.hidden = true;
+    if (lead) lead.textContent = leadText;
+    if (heroLink) heroLink.textContent = "체험판 안내";
     status.textContent = "공개 상태 확인 중";
     message.textContent = "GitHub Releases에서 체험판 정보를 확인하고 있습니다.";
     try {
@@ -69,11 +76,14 @@
       if (result.state === "empty") {
         status.textContent = "체험판 준비 중";
         message.textContent = "아직 공개된 체험판이 없습니다. 준비가 되면 이곳에서 다운로드 파일과 이용 안내를 확인할 수 있습니다.";
+        if (notify) notify.hidden = false;
+        if (lead) lead.textContent = "공개되면 신청 없이 바로 내려받을 수 있는 무료 체험판입니다. 사용 기한이 없습니다.";
       } else {
         status.textContent = result.state === "available" ? "체험판 다운로드" : "배포 파일 준비 중";
         message.textContent = result.state === "available"
           ? "설치 전 릴리스 노트에서 지원 환경과 이용 조건을 확인하고, 사용 중인 Windows에 맞는 파일을 선택하세요."
           : "체험판 소식은 공개되었지만 다운로드할 수 있는 Windows 배포 파일은 아직 없습니다. 공식 Release의 안내를 확인하세요.";
+        if (heroLink && result.state === "available") heroLink.textContent = "체험판 받기";
         showRelease(result);
       }
     } catch (error) {
