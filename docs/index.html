@@ -22,8 +22,8 @@
   <meta name="twitter:image" content="https://plcmanjp.github.io/digitaltwinmax/assets/og-image.jpg?v=2">
   <link rel="canonical" href="https://plcmanjp.github.io/digitaltwinmax/">
   <link rel="icon" type="image/svg+xml" href="assets/mark.svg?v=brand-3">
-  <link rel="stylesheet" href="styles.css?v=why-1">
-  <script src="media-config.js?v=promo-7" defer></script>
+  <link rel="stylesheet" href="styles.css?v=flow-2">
+  <script src="media-config.js?v=feed-3" defer></script>
   <script src="media.js?v=feed-2" defer></script>
   <script src="viewer.js?v=promo-4" defer></script>
   <script src="site.js?v=feed-1" defer></script>
@@ -50,7 +50,7 @@
   <header class="site-header">
     <div class="wrap header-inner">
       <a class="brand" href="#top" aria-label="DigitalTwinMax 처음으로">DigitalTwinMax</a>
-      <nav aria-label="주요 메뉴"><a href="#capabilities">기능</a><a href="#features">사용 흐름</a><a href="#motion">동작 영상</a><a href="#trial">체험판</a></nav>
+      <nav aria-label="주요 메뉴"><a href="#capabilities">기능</a><a href="#features">사용 흐름</a><a href="#trial">체험판</a><a href="#motion">동작 영상</a></nav>
     </div>
   </header>
   <main id="main" tabindex="-1">
@@ -100,6 +100,18 @@
           <div><dt><span class="cap-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 4 L12.5 4 C13.328 4 14 4.672 14 5.5 L14 18.5 C14 19.328 13.328 20 12.5 20 L4.5 20 C3.672 20 3 19.328 3 18.5 L3 5.5 C3 4.672 3.672 4 4.5 4 Z"/><line x1="6.5" y1="8" x2="10.5" y2="8"/><line x1="6.5" y1="12" x2="10.5" y2="12"/><line x1="6.5" y1="16" x2="10.5" y2="16"/><line x1="14" y1="12" x2="18" y2="12"/><path d="M18.5 9.5 L20.5 9.5 C20.776 9.5 21 9.724 21 10 L21 14 C21 14.276 20.776 14.5 20.5 14.5 L18.5 14.5 C18.224 14.5 18 14.276 18 14 L18 10 C18 9.724 18.224 9.5 18.5 9.5 Z"/></svg></span>미쓰비시 PLC 연결</dt><dd>MX Component로 GX Simulator2와 Q 시리즈에 연결합니다.</dd></div>
           <div><dt><span class="cap-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3 L16 3 L21 8 L21 19 C21 20.105 20.105 21 19 21 L5 21 C3.895 21 3 20.105 3 19 L3 5 C3 3.895 3.895 3 5 3 Z"/><polyline points="7,3 7,8 15,8 15,3"/><polyline points="7,21 7,14 17,14 17,21"/></svg></span>저장과 다시 열기</dt><dd>설정한 프로젝트를 저장해 다음 검토에 다시 씁니다.</dd></div>
         </dl>
+        <div class="signal-flow" role="group" aria-labelledby="signal-flow-title">
+          <h3 id="signal-flow-title">PLC와 디지털트윈맥스가 주고받는 것</h3>
+          <div class="signal-loop">
+            <div class="signal-node"><strong>PLC</strong><small>래더 등 제어 프로그램</small></div>
+            <div class="signal-links">
+              <p class="signal-link is-out"><span class="signal-text"><strong>출력</strong> 밸브와 구동 명령<span class="sr-only">, PLC에서 디지털트윈맥스로</span></span><span class="signal-line" aria-hidden="true"></span></p>
+              <p class="signal-link is-in"><span class="signal-line" aria-hidden="true"></span><span class="signal-text"><strong>입력</strong> 센서의 감지 상태<span class="sr-only">, 디지털트윈맥스에서 PLC로</span></span></p>
+            </div>
+            <div class="signal-node"><strong>디지털트윈맥스</strong><small>3D 가상 설비, 구동부 동작과 센서 감지</small></div>
+          </div>
+          <p class="signal-note">구동부와 센서의 포트를 PLC 주소에 매핑하면 신호가 오갑니다. PLC 프로그램은 기존 개발 환경에서 준비합니다.</p>
+        </div>
         <div class="agent-link" role="group" aria-labelledby="agent-link-title">
           <div class="agent-copy">
             <span class="cap-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 4 L19.5 4 C20.328 4 21 4.672 21 5.5 L21 14.5 C21 15.328 20.328 16 19.5 16 L11 16 L6 20 L6 16 L4.5 16 C3.672 16 3 15.328 3 14.5 L3 5.5 C3 4.672 3.672 4 4.5 4 Z"/><circle cx="8.5" cy="10" r="1"/><circle cx="12" cy="10" r="1"/><circle cx="15.5" cy="10" r="1"/></svg></span>
@@ -112,18 +124,6 @@
             <li><strong>앱에서 승인</strong><span>사람이 앱에서 편집안을 확인하고 승인해야 적용됩니다(개발 중).</span></li>
           </ol>
           <p class="agent-note">앱 안에 챗봇은 없습니다. 에이전트는 실제 PLC를 제어하거나 코드를 실행하지 않으며, CAD 원본도 고치지 않습니다. 현재 체험판에는 포함되지 않습니다.</p>
-        </div>
-        <div class="signal-flow" role="group" aria-labelledby="signal-flow-title">
-          <h3 id="signal-flow-title">PLC와 디지털트윈맥스가 주고받는 것</h3>
-          <div class="signal-loop">
-            <div class="signal-node"><strong>PLC</strong><small>래더 등 제어 프로그램</small></div>
-            <div class="signal-links">
-              <p class="signal-link is-out"><span class="signal-text"><strong>출력</strong> 밸브와 구동 명령<span class="sr-only">, PLC에서 디지털트윈맥스로</span></span><span class="signal-line" aria-hidden="true"></span></p>
-              <p class="signal-link is-in"><span class="signal-line" aria-hidden="true"></span><span class="signal-text"><strong>입력</strong> 센서의 감지 상태<span class="sr-only">, 디지털트윈맥스에서 PLC로</span></span></p>
-            </div>
-            <div class="signal-node"><strong>디지털트윈맥스</strong><small>3D 가상 설비, 구동부 동작과 센서 감지</small></div>
-          </div>
-          <p class="signal-note">구동부와 센서의 포트를 PLC 주소에 매핑하면 신호가 오갑니다. PLC 프로그램은 기존 개발 환경에서 준비합니다.</p>
         </div>
       </div>
     </section>
@@ -185,50 +185,6 @@
         </ol>
       </div>
     </section>
-    <section class="media-section" id="motion" data-collection="videos" aria-labelledby="motion-title">
-      <div class="wrap">
-        <div class="section-heading"><div><p class="eyebrow">동작 영상</p><h2 id="motion-title">MINI MPS로<span>동작을 보세요.</span></h2></div><p class="section-description">MINI MPS는 앱에 내장된 튜토리얼용 교육 장비입니다. 아래로 넘기면 다음 장면이 이어서 재생됩니다.</p></div>
-        <div class="feed" hidden></div>
-        <p class="media-empty">영상을 준비하는 중입니다.</p>
-        <details class="more-scenes">
-          <summary>화면으로 보기</summary>
-          <div class="scene-grid">
-            <article>
-              <button type="button" class="zoom-frame" aria-haspopup="dialog"><img src="assets/film-feed.jpg" width="1280" height="720" loading="lazy" alt="공급 매거진을 가까이서 본 가상 실행 화면. 적재물 하나가 매거진에서 나와 컨베이어 위에 있다."><span class="sr-only">확대</span></button>
-              <h3>공급부</h3>
-              <p>매거진에서 나온 적재물이 컨베이어로 넘어갑니다.</p>
-            </article>
-            <article>
-              <button type="button" class="zoom-frame" aria-haspopup="dialog"><img src="assets/film-place.jpg" width="1280" height="720" loading="lazy" alt="이송부와 적재함을 가까이서 본 가상 실행 화면. 초록 적재함과 빨간 통에 제품이 있다."><span class="sr-only">확대</span></button>
-              <h3>이송과 적재</h3>
-              <p>제품을 집어 적재함으로 옮깁니다.</p>
-            </article>
-            <article>
-              <button type="button" class="zoom-frame" aria-haspopup="dialog"><img src="assets/app-scene-top.jpg" width="1568" height="851" loading="lazy" alt="MINI MPS 샘플의 위 시점. 컨베이어와 매거진, 조작 버튼의 배치가 보인다."><span class="sr-only">확대</span></button>
-              <h3>위에서 본 배치</h3>
-              <p>컨베이어, 매거진과 조작 버튼의 위치입니다.</p>
-            </article>
-            <article>
-              <button type="button" class="zoom-frame" aria-haspopup="dialog"><img src="assets/app-scene-front.jpg" width="1568" height="851" loading="lazy" alt="MINI MPS 샘플의 정면 가상 실행 화면. 재생 막대와 설비의 옆모습이 보인다."><span class="sr-only">확대</span></button>
-              <h3>정면</h3>
-              <p>정면 시점에서 본 설비의 옆모습입니다.</p>
-            </article>
-          </div>
-        </details>
-        <p class="scene-note">영상과 화면의 PLC는 모의 상태입니다.</p>
-      </div>
-    </section>
-    <section class="faq wrap" id="faq" aria-labelledby="faq-title">
-      <div class="section-heading"><div><p class="eyebrow">자주 묻는 질문</p><h2 id="faq-title">사용 전에 알아둘 것</h2></div></div>
-      <div class="faq-list">
-        <details><summary>어떤 설비 모델을 불러올 수 있나요?</summary><p>제품판은 STEP 파일(.step, .stp)을 바로 불러옵니다. 체험판은 내장된 MINI MPS 교육 장비를 제공합니다.</p></details>
-        <details><summary>“코드리스”는 어느 작업을 뜻하나요?</summary><p>센서와 구동부의 동작을 스크립트 없이 컴포넌트와 속성 값으로 설정한다는 뜻입니다. 래더 등 PLC 제어 프로그램은 별도로 준비합니다.</p></details>
-        <details><summary>PLC가 없어도 먼저 확인할 수 있나요?</summary><p>네. 가상 실행과 신호 시뮬레이터로 설비의 움직임을 먼저 볼 수 있습니다.</p></details>
-        <details><summary>AI 에이전트와 함께 쓸 수 있나요?</summary><p>MCP를 지원하는 외부 AI 에이전트가 설비 구성과 PLC 신호를 조회할 수 있습니다. 에이전트가 낸 편집안을 앱에서 사람이 승인해 적용하는 기능은 개발 중입니다. 현재 체험판에는 포함되지 않습니다.</p></details>
-        <details><summary>PLC로 시험하려면 무엇이 필요한가요?</summary><p>PLC 제어 프로그램, 통신 환경, 센서와 구동부의 I/O 매핑이 필요합니다. 체험판은 I/O 매핑이 미리 설정되어 있어 래더와 통신 설정만 준비하면 됩니다.</p></details>
-        <details><summary>체험판에 샘플 래더가 들어 있나요?</summary><p>들어 있지 않습니다. GX Works2에서 직접 작성한 래더로 MINI MPS를 시운전해 보는 것이 체험의 목적입니다.</p></details>
-      </div>
-    </section>
     <section class="trial-section wrap" id="trial" aria-labelledby="trial-title">
       <div class="trial-intro"><p class="eyebrow">체험판</p><h2 id="trial-title">직접 짠 래더로 시운전해 보세요</h2><p class="section-description">신청 없이 바로 내려받는 무료 체험판입니다. 사용 기한이 없습니다.</p></div>
       <div class="trial-panel" id="trial-panel" aria-busy="false">
@@ -277,10 +233,54 @@
           </section>
       </div>
     </section>
+    <section class="media-section" id="motion" data-collection="videos" aria-labelledby="motion-title">
+      <div class="wrap">
+        <div class="section-heading"><div><p class="eyebrow">동작 영상</p><h2 id="motion-title">MINI MPS로<span>동작을 보세요.</span></h2></div><p class="section-description">MINI MPS는 앱에 내장된 튜토리얼용 교육 장비입니다. 아래로 넘기면 다음 장면이 이어서 재생됩니다.</p></div>
+        <div class="feed" hidden></div>
+        <p class="media-empty">영상을 준비하는 중입니다.</p>
+        <details class="more-scenes">
+          <summary>화면으로 보기</summary>
+          <div class="scene-grid">
+            <article>
+              <button type="button" class="zoom-frame" aria-haspopup="dialog"><img src="assets/film-feed.jpg" width="1280" height="720" loading="lazy" alt="공급 매거진을 가까이서 본 가상 실행 화면. 적재물 하나가 매거진에서 나와 컨베이어 위에 있다."><span class="sr-only">확대</span></button>
+              <h3>공급부</h3>
+              <p>매거진에서 나온 적재물이 컨베이어로 넘어갑니다.</p>
+            </article>
+            <article>
+              <button type="button" class="zoom-frame" aria-haspopup="dialog"><img src="assets/film-place.jpg" width="1280" height="720" loading="lazy" alt="이송부와 적재함을 가까이서 본 가상 실행 화면. 초록 적재함과 빨간 통에 제품이 있다."><span class="sr-only">확대</span></button>
+              <h3>이송과 적재</h3>
+              <p>제품을 집어 적재함으로 옮깁니다.</p>
+            </article>
+            <article>
+              <button type="button" class="zoom-frame" aria-haspopup="dialog"><img src="assets/app-scene-top.jpg" width="1568" height="851" loading="lazy" alt="MINI MPS 샘플의 위 시점. 컨베이어와 매거진, 조작 버튼의 배치가 보인다."><span class="sr-only">확대</span></button>
+              <h3>위에서 본 배치</h3>
+              <p>컨베이어, 매거진과 조작 버튼의 위치입니다.</p>
+            </article>
+            <article>
+              <button type="button" class="zoom-frame" aria-haspopup="dialog"><img src="assets/app-scene-front.jpg" width="1568" height="851" loading="lazy" alt="MINI MPS 샘플의 정면 가상 실행 화면. 재생 막대와 설비의 옆모습이 보인다."><span class="sr-only">확대</span></button>
+              <h3>정면</h3>
+              <p>정면 시점에서 본 설비의 옆모습입니다.</p>
+            </article>
+          </div>
+        </details>
+        <p class="scene-note">영상과 화면의 PLC는 모의 상태입니다.</p>
+      </div>
+    </section>
+    <section class="faq wrap" id="faq" aria-labelledby="faq-title">
+      <div class="section-heading"><div><p class="eyebrow">자주 묻는 질문</p><h2 id="faq-title">사용 전에 알아둘 것</h2></div></div>
+      <div class="faq-list">
+        <details><summary>어떤 설비 모델을 불러올 수 있나요?</summary><p>제품판은 STEP 파일(.step, .stp)을 바로 불러옵니다. 체험판은 내장된 MINI MPS 교육 장비를 제공합니다.</p></details>
+        <details><summary>“코드리스”는 어느 작업을 뜻하나요?</summary><p>센서와 구동부의 동작을 스크립트 없이 컴포넌트와 속성 값으로 설정한다는 뜻입니다. 래더 등 PLC 제어 프로그램은 별도로 준비합니다.</p></details>
+        <details><summary>PLC가 없어도 먼저 확인할 수 있나요?</summary><p>네. 가상 실행과 신호 시뮬레이터로 설비의 움직임을 먼저 볼 수 있습니다.</p></details>
+        <details><summary>AI 에이전트와 함께 쓸 수 있나요?</summary><p>MCP를 지원하는 외부 AI 에이전트가 설비 구성과 PLC 신호를 조회할 수 있습니다. 에이전트가 낸 편집안을 앱에서 사람이 승인해 적용하는 기능은 개발 중입니다. 현재 체험판에는 포함되지 않습니다.</p></details>
+        <details><summary>PLC로 시험하려면 무엇이 필요한가요?</summary><p>PLC 제어 프로그램, 통신 환경, 센서와 구동부의 I/O 매핑이 필요합니다. 체험판은 I/O 매핑이 미리 설정되어 있어 래더와 통신 설정만 준비하면 됩니다.</p></details>
+        <details><summary>체험판에 샘플 래더가 들어 있나요?</summary><p>들어 있지 않습니다. GX Works2에서 직접 작성한 래더로 MINI MPS를 시운전해 보는 것이 체험의 목적입니다.</p></details>
+      </div>
+    </section>
   </main>
   <footer class="site-footer wrap">
     <div class="footer-top"><a class="footer-brand" href="#top">DigitalTwinMax</a><a class="back-top" href="#top">맨 위로 <span aria-hidden="true">↑</span></a></div>
-    <div class="footer-bottom"><p>디지털트윈맥스</p><p>Windows 앱</p><a href="https://github.com/plcmanjp/digitaltwinmax/issues">의견과 버그 제보 <span aria-hidden="true">↗</span></a><a href="https://github.com/plcmanjp/digitaltwinmax">GitHub <span aria-hidden="true">↗</span></a></div>
+    <div class="footer-bottom"><p>제작: team digitaltwinmax</p><p>Windows 앱</p><a href="mailto:digitaltwinmax@googlegroups.com">문의: digitaltwinmax@googlegroups.com</a><a href="https://github.com/plcmanjp/digitaltwinmax/issues">의견과 버그 제보 <span aria-hidden="true">↗</span></a><a href="https://github.com/plcmanjp/digitaltwinmax">GitHub <span aria-hidden="true">↗</span></a></div>
   </footer>
 </body>
 </html>

@@ -25,6 +25,8 @@ html {
 }
 body {
   margin:0;
+  word-break:keep-all;
+  overflow-wrap:break-word;
 }
 a {
   color:inherit;
@@ -1866,29 +1868,21 @@ button {
   transform-origin:left center;
   transition:transform .25s linear;
 }
-:root.feed-snap {
-  scroll-snap-type:y proximity;
-}
 .feed {
   margin-top:-24px;
 }
 .feed-item {
-  min-height:100vh;
-  min-height:100svh;
   display:flex;
   flex-direction:column;
-  justify-content:center;
   gap:20px;
-  padding:32px 0;
-  scroll-snap-align:center;
-  scroll-snap-stop:always;
+  padding:40px 0;
 }
 .feed-item+.feed-item {
   border-top:1px solid #2c2d2a;
 }
 .feed-stage,.feed-info {
-  width:min(100%,calc((100vh - 200px)*16/9));
-  width:min(100%,calc((100svh - 200px)*16/9));
+  width:min(100%,1040px,calc((100vh - 200px)*16/9));
+  width:min(100%,1040px,calc((100svh - 200px)*16/9));
   margin-inline:auto;
 }
 .media-error .feed-stage video {
@@ -1966,9 +1960,8 @@ button {
 }
 @media(max-width:700px) {
   .feed-item {
-    min-height:72vh;
-    min-height:72svh;
     gap:16px;
+    padding:28px 0;
   }
   .feed-stage {
     width:calc(100% + var(--gutter)*2);
@@ -1994,19 +1987,19 @@ button {
   display:grid;
   grid-template-columns:minmax(260px,1fr) 1.5fr;
   gap:24px 48px;
-  margin-top:32px;
-  padding:32px;
+  margin-top:24px;
+  padding:24px 28px;
   border:1px solid var(--line);
 }
 .agent-copy h3 {
-  font-size:22px;
+  font-size:18px;
   font-weight:600;
   letter-spacing:-.04em;
 }
 .agent-copy p {
-  margin-top:10px;
+  margin-top:8px;
   color:var(--muted);
-  font-size:15px;
+  font-size:14px;
   line-height:1.75;
   word-break:keep-all;
 }
@@ -2021,12 +2014,12 @@ button {
 }
 .agent-steps li {
   counter-increment:agent-step;
-  padding-top:16px;
-  border-top:2px solid var(--ink);
+  padding-top:12px;
+  border-top:1px solid var(--ink);
 }
 .agent-steps strong {
   display:block;
-  font-size:16px;
+  font-size:14px;
   font-weight:600;
 }
 .agent-steps strong::before {
@@ -2037,9 +2030,9 @@ button {
 }
 .agent-steps span {
   display:block;
-  margin-top:8px;
+  margin-top:6px;
   color:var(--muted);
-  font-size:14px;
+  font-size:13px;
   line-height:1.7;
   word-break:keep-all;
 }
