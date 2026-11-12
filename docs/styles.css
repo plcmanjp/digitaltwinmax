@@ -1774,6 +1774,15 @@ button {
   object-fit:contain;
   background:#111;
 }
+.usage-overview {
+  width:min(100%,1100px);
+  margin:0 auto 64px;
+}
+.usage-overview figcaption {
+  margin-top:12px;
+  line-height:1.6;
+  color:var(--muted);
+}
 .is-playing video,.feed-stage video,.promo-stage video:not([controls]) {
   cursor:pointer;
 }
