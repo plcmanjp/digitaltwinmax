@@ -370,6 +370,7 @@
       refresh();
     }, { threshold: [0, .25, .5, PLAY_RATIO, .75, .9, 1] }) : null;
     const nearby = win.IntersectionObserver ? new win.IntersectionObserver(entries => {
+      if (reduced()) return;
       entries.forEach(entry => {
         if (entry.intersectionRatio > 0 || entry.isIntersecting) entry.target.preload = "auto";
       });
@@ -419,17 +420,25 @@
     progress.setAttribute("aria-hidden", "true");
     const bar = doc.createElement("span");
     progress.append(bar);
+    const syncStarted = () => {
+      stage.classList.toggle("has-started", Number(video.currentTime) >= 0.12);
+    };
     const sync = () => {
       const playing = !video.paused;
       button.setAttribute("aria-label", `${label} ${playing ? "일시정지" : "재생"}`);
       stage.classList.toggle("is-playing", playing);
+      syncStarted();
     };
     video.addEventListener("play", sync);
     video.addEventListener("pause", sync);
+    video.addEventListener("seeked", syncStarted);
     video.addEventListener("timeupdate", () => {
       const duration = Number(video.duration);
       const ratio = duration > 0 ? Math.min(1, Math.max(0, video.currentTime / duration)) : 0;
       if (bar.style) bar.style.transform = `scaleX(${ratio})`;
+      if (!stage.classList.contains("has-started") && Number(video.currentTime) >= 0.12) {
+        stage.classList.add("has-started");
+      }
     });
     button.addEventListener("click", () => controller.toggle(video));
     video.addEventListener("click", () => controller.toggle(video));

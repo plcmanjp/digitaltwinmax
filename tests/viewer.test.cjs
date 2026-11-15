@@ -79,30 +79,42 @@ test('a scene opens in a dialog and closes back to the same control', () => {
   assert.equal(api.open(frame), true);
   frame.emit('click');
   const dialog = doc.querySelector('.lightbox');
+  const closeButton = dialog.querySelector('.lightbox-close');
   const image = dialog.querySelector('img');
   assert.equal(dialog.open, true);
+  assert.equal(doc.active, closeButton);
   assert.equal(image.src, 'assets/top.jpg');
   assert.equal(image.alt, '<img onerror=alert(1)>');
   assert.equal(dialog.querySelector('figcaption').textContent, '<script>alert(1)</script>');
   assert.equal(doc.querySelectorAll('script').length, 0);
-  dialog.querySelector('.lightbox-close').emit('click');
+  closeButton.emit('click');
   assert.equal(dialog.open, false);
   assert.equal(image.getAttribute('src'), null);
   assert.equal(doc.active, frame);
 });
-test('the backdrop closes the dialog and another scene keeps its own picture', () => {
+test('the backdrop closes the dialog only outside bounds and another scene keeps its own picture', () => {
   const { doc, heroFrame, frame } = page();
   const api = mount(doc);
   heroFrame.emit('click');
   const dialog = api.dialog;
   assert.equal(dialog.querySelector('img').src, 'assets/hero.jpg');
   assert.equal(dialog.querySelector('figcaption').textContent, '등각 시점');
+  dialog.emit('click', { target: dialog.querySelector('figure') });
+  assert.equal(dialog.open, true);
   dialog.emit('click', { target: dialog.querySelector('img') });
   assert.equal(dialog.open, true);
-  dialog.emit('click');
+  dialog.getBoundingClientRect = () => ({ left: 100, top: 80, right: 500, bottom: 380 });
+  dialog.emit('click', { detail: 1, clientX: 120, clientY: 100 });
+  assert.equal(dialog.open, true);
+  dialog.emit('click', { detail: 0, clientX: 20, clientY: 100 });
+  assert.equal(dialog.open, true);
+  dialog.emit('click', { detail: 1, clientX: 20, clientY: 100 });
   assert.equal(dialog.open, false);
   frame.emit('click');
   assert.equal(dialog.querySelector('img').src, 'assets/top.jpg');
+  delete dialog.getBoundingClientRect;
+  dialog.emit('click');
+  assert.equal(dialog.open, false);
   assert.equal(mount(doc), null);
 });
 test('rejected image addresses do not open the dialog', () => {

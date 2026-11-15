@@ -411,3 +411,23 @@ test('without stage fullscreen, iPhone-style native video fullscreen is used, ot
   enhance(plain);
   assert.equal(bare.querySelector('.video-fullscreen').hidden, true);
 });
+test('reduced motion prevents nearby preloading and stage keeps poster state until playback starts', () => {
+  const reduced = feedFixture({ reduced: true });
+  const stage = reduced.doc.createElement('div');
+  const hero = reduced.doc.createElement('video');
+  hero.preload = 'none';
+  stage.append(hero); hero.parentElement = stage;
+  enhance(hero);
+  reduced.observers[1].callback([{ target: hero, intersectionRatio: 0.5, isIntersecting: true }]);
+  assert.equal(hero.preload, 'none');
+  assert.equal(stage.classList.contains('has-started'), false);
+  hero.play();
+  hero.currentTime = 0.05; hero.emit('timeupdate');
+  assert.equal(stage.classList.contains('has-started'), false);
+  hero.currentTime = 0.2; hero.emit('timeupdate');
+  assert.equal(stage.classList.contains('has-started'), true);
+  hero.pause();
+  assert.equal(stage.classList.contains('has-started'), true);
+  hero.currentTime = 0; hero.play();
+  assert.equal(stage.classList.contains('has-started'), false);
+});

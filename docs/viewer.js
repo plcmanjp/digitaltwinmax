@@ -54,7 +54,17 @@
     };
     dialog.addEventListener("close", finish);
     closeButton.addEventListener("click", close);
-    dialog.addEventListener("click", event => { if (event.target === dialog) close(); });
+    dialog.addEventListener("click", event => {
+      if (event.target !== dialog) return;
+      if (typeof dialog.getBoundingClientRect === "function" && Number.isFinite(event.clientX) && Number.isFinite(event.clientY)) {
+        if (event.detail === 0) return;
+        const bounds = dialog.getBoundingClientRect();
+        const outside = event.clientX < bounds.left || event.clientX > bounds.right ||
+          event.clientY < bounds.top || event.clientY > bounds.bottom;
+        if (!outside) return;
+      }
+      close();
+    });
     function open(frame) {
       const source = frame.querySelector("img");
       const src = localImage(source && source.getAttribute("src"));
@@ -66,6 +76,7 @@
       opener = frame;
       if (typeof dialog.showModal === "function") dialog.showModal();
       else dialog.setAttribute("open", "");
+      if (typeof closeButton.focus === "function") closeButton.focus();
       return true;
     }
     frames.forEach(frame => frame.addEventListener("click", () => open(frame)));
