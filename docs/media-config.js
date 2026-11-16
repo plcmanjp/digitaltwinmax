@@ -17,14 +17,14 @@ window.DTM_MEDIA = {
       src: "assets/film-feed.mp4",
       poster: "assets/film-feed.jpg",
       title: "공급 매거진",
-      caption: "공급 매거진을 가까이서 본 가상 실행입니다. 적재물이 매거진에서 나와 컨베이어로 넘어갑니다.",
+      caption: "공급 매거진을 가까이서 본 가상 실행입니다. 워크가 매거진에서 나와 컨베이어로 넘어갑니다.",
       silent: true
     },
     {
       src: "assets/film-place.mp4",
       poster: "assets/film-place.jpg",
       title: "이송과 적재",
-      caption: "이송부를 가까이서 본 가상 실행입니다. 제품이 적재함과 배출 쪽으로 옮겨집니다.",
+      caption: "이송부를 가까이서 본 가상 실행입니다. 워크가 적재함과 배출 쪽으로 옮겨집니다.",
       silent: true
     }
   ]

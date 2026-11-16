@@ -84,7 +84,7 @@
         if (notify) notify.hidden = true;
         status.textContent = result.state === "available" ? "체험판 다운로드" : "배포 파일 준비 중";
         message.textContent = result.state === "available"
-          ? "설치 전 릴리스 노트에서 지원 환경과 이용 조건을 확인하고, 사용 중인 Windows에 맞는 파일을 선택하세요."
+          ? "릴리스 노트에서 지원 환경과 이용 조건을 확인하고, 사용 중인 Windows에 맞는 파일을 선택하세요."
           : "체험판 소식은 공개되었지만 다운로드할 수 있는 Windows 배포 파일은 아직 없습니다. 공식 Release의 안내를 확인하세요.";
         if (result.state === "available") {
           if (heroLink) heroLink.textContent = "체험판 받기";
