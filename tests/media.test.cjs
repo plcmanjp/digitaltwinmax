@@ -324,11 +324,11 @@ test('a visitor pause is respected until the scene leaves the screen', () => {
   f.see(media, 0.8); assert.equal(media.paused, true);
   f.see(media, 0); f.see(media, 1); assert.equal(media.paused, false);
 });
-test('reduced motion disables automatic playback but keeps the play button', () => {
+test('scroll autoplay stays active under reduced motion while manual toggle still pauses and switches', () => {
   const f = feedFixture({ reduced: true }); const api = mountFeed(f.section, [silentVideo(1), silentVideo(2)]);
   const media = api.cards[0].video;
-  f.see(media, 1); assert.equal(media.paused, true);
-  api.cards[0].toggle.emit('click'); assert.equal(media.paused, false);
+  f.see(media, 1); assert.equal(media.paused, false);
+  api.cards[0].toggle.emit('click'); assert.equal(media.paused, true);
   api.cards[1].toggle.emit('click'); assert.equal(media.paused, true); assert.equal(api.cards[1].video.paused, false);
 });
 test('hidden tabs pause the feed and returning resumes the visible scene', () => {
@@ -412,7 +412,7 @@ test('without stage fullscreen, iPhone-style native video fullscreen is used, ot
   enhance(plain);
   assert.equal(bare.querySelector('.video-fullscreen').hidden, true);
 });
-test('reduced motion prevents nearby preloading and stage keeps poster state until playback starts', () => {
+test('nearby observer preloads videos and stage keeps poster state until playback advances', () => {
   const reduced = feedFixture({ reduced: true });
   const stage = reduced.doc.createElement('div');
   const hero = reduced.doc.createElement('video');
@@ -420,7 +420,7 @@ test('reduced motion prevents nearby preloading and stage keeps poster state unt
   stage.append(hero); hero.parentElement = stage;
   enhance(hero);
   reduced.observers[1].callback([{ target: hero, intersectionRatio: 0.5, isIntersecting: true }]);
-  assert.equal(hero.preload, 'none');
+  assert.equal(hero.preload, 'auto');
   assert.equal(stage.classList.contains('has-started'), false);
   hero.play();
   hero.currentTime = 0.05; hero.emit('timeupdate');
@@ -432,7 +432,7 @@ test('reduced motion prevents nearby preloading and stage keeps poster state unt
   hero.currentTime = 0; hero.play();
   assert.equal(stage.classList.contains('has-started'), false);
 });
-test('progress bar click and toggle arrow keys seek within video duration', () => {
+test('progress bar click, pointer drag and toggle arrow keys seek within video duration and update time badge', () => {
   const f = feedFixture();
   const stage = f.doc.createElement('div');
   const hero = f.doc.createElement('video');
@@ -440,13 +440,21 @@ test('progress bar click and toggle arrow keys seek within video duration', () =
   stage.append(hero); hero.parentElement = stage;
   enhance(hero);
   const progress = stage.querySelector('.video-progress');
+  const time = stage.querySelector('.video-time');
   const toggle = stage.querySelector('.video-toggle');
   progress.getBoundingClientRect = () => ({ left: 10, top: 0, width: 200, height: 6, right: 210, bottom: 6 });
   progress.emit('click', { clientX: 110, stopPropagation() {} });
   assert.equal(hero.currentTime, 20);
+  assert.equal(time.textContent, '0:20 / 0:40');
   assert.equal(stage.classList.contains('has-started'), true);
+  progress.emit('pointerdown', { button: 0, pointerId: 3, clientX: 60, stopPropagation() {} });
+  assert.equal(hero.currentTime, 10);
+  assert.equal(stage.classList.contains('is-scrubbing'), true);
+  f.win.emit('pointermove');
+  f.win.emit('pointerup');
+  assert.equal(stage.classList.contains('is-scrubbing'), false);
   assert.equal(toggle.emit('keydown', { key: 'ArrowRight' }).defaultPrevented, true);
-  assert.equal(hero.currentTime, 25);
+  assert.equal(hero.currentTime, 15);
   assert.equal(toggle.emit('keydown', { key: 'ArrowLeft' }).defaultPrevented, true);
-  assert.equal(hero.currentTime, 20);
+  assert.equal(hero.currentTime, 10);
 });

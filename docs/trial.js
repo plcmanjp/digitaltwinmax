@@ -68,7 +68,6 @@
     panel.setAttribute("aria-busy", "true");
     detail.replaceChildren();
     detail.hidden = true;
-    if (notify) notify.hidden = true;
     if (lead) lead.textContent = leadText;
     if (heroLink) heroLink.textContent = "체험판 안내";
     if (bottomLink) bottomLink.textContent = "체험판 안내로 이동 ↑";
@@ -82,6 +81,7 @@
         if (notify) notify.hidden = false;
         if (lead) lead.textContent = "공개되면 신청 없이 바로 내려받을 수 있는 무료 체험판입니다. 사용 기한이 없습니다.";
       } else {
+        if (notify) notify.hidden = true;
         status.textContent = result.state === "available" ? "체험판 다운로드" : "배포 파일 준비 중";
         message.textContent = result.state === "available"
           ? "설치 전 릴리스 노트에서 지원 환경과 이용 조건을 확인하고, 사용 중인 Windows에 맞는 파일을 선택하세요."
@@ -93,6 +93,7 @@
         showRelease(result);
       }
     } catch (error) {
+      if (notify) notify.hidden = true;
       status.textContent = "현재 상태를 확인할 수 없습니다";
       const messages = {
         "rate-limit": "GitHub의 조회가 일시적으로 제한되었습니다. 잠시 후 다시 확인하거나 공식 Releases 목록을 이용하세요.",
@@ -108,5 +109,20 @@
   }
   retry.hidden = false;
   retry.addEventListener("click", refresh);
+  const copyButton = document.getElementById("copy-hash-cmd");
+  if (copyButton && navigator.clipboard?.writeText) {
+    copyButton.hidden = false;
+    let copyTimer;
+    copyButton.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText("Get-FileHash .\\DigitalTwinMax-Trial-*.zip -Algorithm SHA256");
+        copyButton.textContent = "복사됨";
+        clearTimeout(copyTimer);
+        copyTimer = setTimeout(() => { copyButton.textContent = "명령 복사"; }, 2000);
+      } catch {
+        copyButton.textContent = "직접 복사해 주세요";
+      }
+    });
+  }
   refresh();
 })();

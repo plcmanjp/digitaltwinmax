@@ -318,17 +318,24 @@
     update(0);
     return { go, track, slides, get index() { return current; } };
   }
-  // One controller per document: the most visible video (at least 60%) plays,
-  // every other video pauses. Reduced motion disables automatic playback.
+  // One controller per document: the most visible video (at least 45%) plays,
+  // every other video pauses. Scroll autoplay stays active even when Windows
+  // window animations are turned off.
   const controllers = new WeakMap();
-  const PLAY_RATIO = .6;
+  const PLAY_RATIO = .45;
+  function formatTime(seconds) {
+    const total = Math.max(0, Math.floor(Number(seconds) || 0));
+    const mins = Math.floor(total / 60);
+    const secs = String(total % 60).padStart(2, "0");
+    return `${mins}:${secs}`;
+  }
   function autoplayController(doc) {
     if (controllers.has(doc)) return controllers.get(doc);
     const win = doc.defaultView;
     const states = new Map();
     let active = null;
-    const reduced = () => Boolean(win.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
     const start = video => {
+      if (video.preload === "none") video.preload = "auto";
       const result = video.play?.();
       if (result && typeof result.catch === "function") result.catch(() => {});
     };
@@ -346,7 +353,14 @@
     function refresh() {
       const next = doc.hidden ? null : choose();
       if (next !== active) {
-        active?.pause();
+        if (active) {
+          const prevState = states.get(active);
+          if (prevState && next) {
+            prevState.left = true;
+            prevState.userPaused = false;
+          }
+          active.pause();
+        }
         active = next;
         const state = active && states.get(active);
         if (state?.left) {
@@ -355,7 +369,7 @@
         }
       }
       states.forEach((state, video) => { if (video !== active && !video.paused) video.pause(); });
-      if (active && active.paused && !states.get(active).userPaused && !reduced()) start(active);
+      if (active && active.paused && !states.get(active).userPaused) start(active);
     }
     const observer = win.IntersectionObserver ? new win.IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -368,13 +382,12 @@
         }
       });
       refresh();
-    }, { threshold: [0, .25, .5, PLAY_RATIO, .75, .9, 1] }) : null;
+    }, { threshold: [0, .15, .25, .35, PLAY_RATIO, .6, .75, .9, 1] }) : null;
     const nearby = win.IntersectionObserver ? new win.IntersectionObserver(entries => {
-      if (reduced()) return;
       entries.forEach(entry => {
         if (entry.intersectionRatio > 0 || entry.isIntersecting) entry.target.preload = "auto";
       });
-    }, { rootMargin: "0px 0px 100% 0px" }) : null;
+    }, { rootMargin: "200px 0px 100% 0px" }) : null;
     doc.addEventListener("visibilitychange", refresh);
     win.addEventListener("pagehide", () => states.forEach((state, video) => video.pause()));
     const api = {
@@ -383,6 +396,10 @@
         video.addEventListener("play", () => {
           if (active && active !== video) active.pause();
           active = video;
+        });
+        video.addEventListener("canplay", () => {
+          const state = states.get(video);
+          if (active === video && video.paused && state && !state.userPaused && !doc.hidden) start(video);
         });
         observer?.observe(video);
         nearby?.observe(video);
@@ -420,6 +437,10 @@
     progress.setAttribute("aria-hidden", "true");
     const bar = doc.createElement("span");
     progress.append(bar);
+    const timeLabel = doc.createElement("span");
+    timeLabel.className = "video-time";
+    timeLabel.setAttribute("aria-hidden", "true");
+    timeLabel.hidden = true;
     const syncStarted = () => {
       stage.classList.toggle("has-started", Number(video.currentTime) >= 0.12);
     };
@@ -431,9 +452,14 @@
     };
     const updateProgress = () => {
       const duration = Number(video.duration);
-      const ratio = duration > 0 ? Math.min(1, Math.max(0, video.currentTime / duration)) : 0;
+      const current = Math.max(0, Number(video.currentTime) || 0);
+      const ratio = duration > 0 ? Math.min(1, Math.max(0, current / duration)) : 0;
       if (bar.style) bar.style.transform = `scaleX(${ratio})`;
-      if (!stage.classList.contains("has-started") && Number(video.currentTime) >= 0.12) {
+      if (duration > 0) {
+        timeLabel.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+        timeLabel.hidden = false;
+      }
+      if (!stage.classList.contains("has-started") && current >= 0.12) {
         stage.classList.add("has-started");
       }
     };
@@ -446,15 +472,42 @@
       syncStarted();
       return true;
     };
+    const seekFromEvent = event => {
+      const rect = typeof progress.getBoundingClientRect === "function" ? progress.getBoundingClientRect() : null;
+      if (!rect || !(rect.width > 0) || !Number.isFinite(event?.clientX)) return;
+      seekToRatio((event.clientX - rect.left) / rect.width);
+    };
     video.addEventListener("play", sync);
     video.addEventListener("pause", sync);
+    video.addEventListener("loadedmetadata", updateProgress);
     video.addEventListener("seeked", syncStarted);
     video.addEventListener("timeupdate", updateProgress);
+    let scrubbing = null;
+    const endScrub = event => {
+      if (scrubbing === null || (event?.pointerId !== undefined && event.pointerId !== scrubbing)) return;
+      scrubbing = null;
+      stage.classList.remove("is-scrubbing");
+      doc.defaultView?.removeEventListener?.("pointermove", onScrubMove);
+      doc.defaultView?.removeEventListener?.("pointerup", endScrub);
+      doc.defaultView?.removeEventListener?.("pointercancel", endScrub);
+    };
+    const onScrubMove = event => {
+      if (scrubbing === null || (event?.pointerId !== undefined && event.pointerId !== scrubbing)) return;
+      seekFromEvent(event);
+    };
+    progress.addEventListener("pointerdown", event => {
+      if (event.button && event.button !== 0) return;
+      event.stopPropagation?.();
+      scrubbing = event.pointerId ?? 1;
+      stage.classList.add("is-scrubbing");
+      seekFromEvent(event);
+      doc.defaultView?.addEventListener?.("pointermove", onScrubMove);
+      doc.defaultView?.addEventListener?.("pointerup", endScrub);
+      doc.defaultView?.addEventListener?.("pointercancel", endScrub);
+    });
     progress.addEventListener("click", event => {
       event.stopPropagation?.();
-      const rect = typeof progress.getBoundingClientRect === "function" ? progress.getBoundingClientRect() : null;
-      if (!rect || !(rect.width > 0) || !Number.isFinite(event.clientX)) return;
-      seekToRatio((event.clientX - rect.left) / rect.width);
+      seekFromEvent(event);
     });
     button.addEventListener("keydown", event => {
       const step = { ArrowLeft: -5, ArrowRight: 5 }[event.key];
@@ -468,7 +521,7 @@
     button.addEventListener("click", () => controller.toggle(video));
     video.addEventListener("click", () => controller.toggle(video));
     const full = attachFullscreen(video, stage, controller, label);
-    stage.append(button, full, progress);
+    stage.append(button, timeLabel, full, progress);
     sync();
     return button;
   }
