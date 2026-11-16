@@ -87,6 +87,12 @@ test('a scene opens in a dialog and closes back to the same control', () => {
   assert.equal(image.src, 'assets/top.jpg');
   assert.equal(image.alt, '<img onerror=alert(1)>');
   assert.equal(dialog.querySelector('figcaption').textContent, '<script>alert(1)</script>');
+  assert.equal(dialog.querySelector('.lightbox-count').textContent, '02 / 02');
+  dialog.querySelector('.lightbox-prev').emit('click');
+  assert.equal(image.src, 'assets/hero.jpg');
+  assert.equal(dialog.querySelector('.lightbox-count').textContent, '01 / 02');
+  assert.equal(dialog.emit('keydown', { key: 'ArrowRight' }).defaultPrevented, true);
+  assert.equal(image.src, 'assets/top.jpg');
   assert.equal(doc.querySelectorAll('script').length, 0);
   closeButton.emit('click');
   assert.equal(dialog.open, false);

@@ -458,3 +458,24 @@ test('progress bar click, pointer drag and toggle arrow keys seek within video d
   assert.equal(toggle.emit('keydown', { key: 'ArrowLeft' }).defaultPrevented, true);
   assert.equal(hero.currentTime, 10);
 });
+test('chapter buttons seek to target seconds, start playback and track current chapter', () => {
+  const f = feedFixture();
+  const figure = f.doc.createElement('figure');
+  const stage = f.doc.createElement('div');
+  const hero = f.doc.createElement('video');
+  hero.duration = 39;
+  const chapters = f.doc.createElement('div');
+  const c0 = f.doc.createElement('button'); c0.setAttribute('data-seek', '0');
+  const c1 = f.doc.createElement('button'); c1.setAttribute('data-seek', '17.5');
+  chapters.append(c0, c1);
+  stage.append(hero); hero.parentElement = stage;
+  figure.append(stage, chapters); stage.parentElement = figure;
+  enhance(hero);
+  assert.equal(c0.getAttribute('aria-current'), 'true');
+  assert.equal(c1.getAttribute('aria-current'), 'false');
+  c1.emit('click');
+  assert.equal(hero.currentTime, 17.5);
+  assert.equal(hero.paused, false);
+  assert.equal(c1.getAttribute('aria-current'), 'true');
+  assert.equal(c0.getAttribute('aria-current'), 'false');
+});

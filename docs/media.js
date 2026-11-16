@@ -578,7 +578,32 @@
     if (!video || !video.parentElement) return null;
     const controller = autoplayController(video.ownerDocument);
     prepareInline(video);
-    const button = attachControls(video, video.parentElement, controller, label || video.getAttribute("aria-label") || "영상");
+    const stage = video.parentElement;
+    const button = attachControls(video, stage, controller, label || video.getAttribute("aria-label") || "영상");
+    const container = stage.parentElement;
+    const chapters = container?.querySelectorAll
+      ? [...container.querySelectorAll("button")].filter(node => node.getAttribute?.("data-seek") != null)
+      : [];
+    if (chapters.length) {
+      const points = chapters.map(node => ({ node, time: Math.max(0, Number(node.getAttribute("data-seek")) || 0) }));
+      const syncChapters = () => {
+        const now = Math.max(0, Number(video.currentTime) || 0);
+        let activeIdx = 0;
+        points.forEach((pt, idx) => { if (now >= pt.time - 0.15) activeIdx = idx; });
+        points.forEach((pt, idx) => pt.node.setAttribute("aria-current", String(idx === activeIdx)));
+      };
+      points.forEach(({ node, time }) => {
+        node.addEventListener("click", () => {
+          try { video.currentTime = time; } catch { /* metadata pending */ }
+          stage.classList.toggle("has-started", time >= 0.12);
+          if (video.paused) controller.toggle(video);
+          syncChapters();
+        });
+      });
+      video.addEventListener("timeupdate", syncChapters);
+      video.addEventListener("seeked", syncChapters);
+      syncChapters();
+    }
     controller.observe(video);
     return { video, button, controller };
   }

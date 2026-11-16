@@ -26,8 +26,19 @@
       return node;
     };
     const dialog = make("dialog", "lightbox");
+    const bar = make("div", "lightbox-bar");
+    const count = make("span", "lightbox-count");
+    const actions = make("div", "lightbox-actions");
+    const prevButton = make("button", "lightbox-nav lightbox-prev", "← 이전");
+    prevButton.type = "button";
+    prevButton.setAttribute("aria-label", "이전 화면");
+    const nextButton = make("button", "lightbox-nav lightbox-next", "다음 →");
+    nextButton.type = "button";
+    nextButton.setAttribute("aria-label", "다음 화면");
     const closeButton = make("button", "lightbox-close", "닫기");
     closeButton.type = "button";
+    actions.append(prevButton, nextButton, closeButton);
+    bar.append(count, actions);
     const figure = make("figure");
     const image = make("img");
     image.alt = "";
@@ -35,11 +46,17 @@
     caption.id = "scene-lightbox-title";
     dialog.setAttribute("aria-labelledby", caption.id);
     figure.append(image, caption);
-    dialog.append(closeButton, figure);
+    dialog.append(bar, figure);
     doc.body.append(dialog);
     let opener = null;
+    let currentIndex = -1;
+    const validFrames = () => frames.filter(frame => {
+      const source = frame.querySelector("img");
+      return Boolean(source && localImage(source.getAttribute("src")));
+    });
     const finish = () => {
       image.removeAttribute("src");
+      currentIndex = -1;
       const back = opener;
       opener = null;
       if (back && typeof back.focus === "function") back.focus();
@@ -52,8 +69,45 @@
         finish();
       }
     };
+    function showFrame(frame, keepOpener = false) {
+      const source = frame && frame.querySelector("img");
+      const src = localImage(source && source.getAttribute("src"));
+      if (!source || !src) return false;
+      const valid = validFrames();
+      currentIndex = valid.indexOf(frame);
+      const total = valid.length;
+      count.textContent = total > 0 && currentIndex >= 0
+        ? `${String(currentIndex + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`
+        : "";
+      const hasMultiple = total > 1;
+      prevButton.hidden = !hasMultiple;
+      nextButton.hidden = !hasMultiple;
+      image.setAttribute("src", src);
+      image.src = src;
+      image.alt = source.getAttribute("alt") || "";
+      caption.textContent = captionText(frame) || image.alt;
+      if (!keepOpener) opener = frame;
+      if (!dialog.open && !dialog.hasAttribute?.("open") && dialog.getAttribute("open") == null) {
+        if (typeof dialog.showModal === "function") dialog.showModal();
+        else dialog.setAttribute("open", "");
+        if (typeof closeButton.focus === "function") closeButton.focus();
+      }
+      return true;
+    }
+    function step(delta) {
+      const valid = validFrames();
+      if (valid.length < 2 || currentIndex < 0) return false;
+      const nextIndex = (currentIndex + delta + valid.length) % valid.length;
+      return showFrame(valid[nextIndex], true);
+    }
     dialog.addEventListener("close", finish);
     closeButton.addEventListener("click", close);
+    prevButton.addEventListener("click", () => step(-1));
+    nextButton.addEventListener("click", () => step(1));
+    dialog.addEventListener("keydown", event => {
+      if (event.key === "ArrowLeft" && step(-1)) event.preventDefault();
+      else if (event.key === "ArrowRight" && step(1)) event.preventDefault();
+    });
     dialog.addEventListener("click", event => {
       if (event.target !== dialog) return;
       if (typeof dialog.getBoundingClientRect === "function" && Number.isFinite(event.clientX) && Number.isFinite(event.clientY)) {
@@ -66,21 +120,10 @@
       close();
     });
     function open(frame) {
-      const source = frame.querySelector("img");
-      const src = localImage(source && source.getAttribute("src"));
-      if (!source || !src) return false;
-      image.setAttribute("src", src);
-      image.src = src;
-      image.alt = source.getAttribute("alt") || "";
-      caption.textContent = captionText(frame) || image.alt;
-      opener = frame;
-      if (typeof dialog.showModal === "function") dialog.showModal();
-      else dialog.setAttribute("open", "");
-      if (typeof closeButton.focus === "function") closeButton.focus();
-      return true;
+      return showFrame(frame, false);
     }
     frames.forEach(frame => frame.addEventListener("click", () => open(frame)));
-    return { dialog, open, close };
+    return { dialog, open, close, step };
   }
   if (typeof document !== "undefined") mount(document);
   return { localImage, mount };
