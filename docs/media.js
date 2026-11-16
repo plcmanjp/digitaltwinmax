@@ -6,14 +6,14 @@
 })(typeof window !== "undefined" ? window : globalThis, function () {
   "use strict";
   const extensions = {
-    image: /\.(?:avif|webp|png|jpe?g|svg)$/i,
-    video: /\.(?:mp4|webm)$/i,
-    captions: /\.vtt$/i,
-    transcript: /\.(?:txt|html)$/i
+    image: /\.(?:avif|webp|png|jpe?g|svg)(?:\?v=[a-zA-Z0-9_-]+)?$/i,
+    video: /\.(?:mp4|webm)(?:\?v=[a-zA-Z0-9_-]+)?$/i,
+    captions: /\.vtt(?:\?v=[a-zA-Z0-9_-]+)?$/i,
+    transcript: /\.(?:txt|html)(?:\?v=[a-zA-Z0-9_-]+)?$/i
   };
   const text = (value, fallback = "", limit = 500) => typeof value === "string" && value.trim() ? value.trim().slice(0, limit) : fallback;
   function localAsset(value, kind) {
-    if (typeof value !== "string" || !/^assets\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_.-]+$/.test(value) || value.includes("..")) return "";
+    if (typeof value !== "string" || !/^assets\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_.-]+(?:\?v=[a-zA-Z0-9_-]+)?$/.test(value) || value.includes("..")) return "";
     return extensions[kind]?.test(value) ? value : "";
   }
   function normalizeItems(input, kind) {
@@ -429,16 +429,41 @@
       stage.classList.toggle("is-playing", playing);
       syncStarted();
     };
-    video.addEventListener("play", sync);
-    video.addEventListener("pause", sync);
-    video.addEventListener("seeked", syncStarted);
-    video.addEventListener("timeupdate", () => {
+    const updateProgress = () => {
       const duration = Number(video.duration);
       const ratio = duration > 0 ? Math.min(1, Math.max(0, video.currentTime / duration)) : 0;
       if (bar.style) bar.style.transform = `scaleX(${ratio})`;
       if (!stage.classList.contains("has-started") && Number(video.currentTime) >= 0.12) {
         stage.classList.add("has-started");
       }
+    };
+    const seekToRatio = ratio => {
+      const duration = Number(video.duration);
+      if (!(duration > 0)) return false;
+      const clamped = Math.min(1, Math.max(0, Number(ratio) || 0));
+      video.currentTime = clamped * duration;
+      updateProgress();
+      syncStarted();
+      return true;
+    };
+    video.addEventListener("play", sync);
+    video.addEventListener("pause", sync);
+    video.addEventListener("seeked", syncStarted);
+    video.addEventListener("timeupdate", updateProgress);
+    progress.addEventListener("click", event => {
+      event.stopPropagation?.();
+      const rect = typeof progress.getBoundingClientRect === "function" ? progress.getBoundingClientRect() : null;
+      if (!rect || !(rect.width > 0) || !Number.isFinite(event.clientX)) return;
+      seekToRatio((event.clientX - rect.left) / rect.width);
+    });
+    button.addEventListener("keydown", event => {
+      const step = { ArrowLeft: -5, ArrowRight: 5 }[event.key];
+      const duration = Number(video.duration);
+      if (!step || !(duration > 0)) return;
+      event.preventDefault();
+      video.currentTime = Math.min(duration, Math.max(0, (Number(video.currentTime) || 0) + step));
+      updateProgress();
+      syncStarted();
     });
     button.addEventListener("click", () => controller.toggle(video));
     video.addEventListener("click", () => controller.toggle(video));

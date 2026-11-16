@@ -6,8 +6,8 @@
 })(typeof window !== "undefined" ? window : globalThis, function () {
   "use strict";
   function localImage(value) {
-    if (typeof value !== "string" || !/^assets\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_.-]+$/.test(value) || value.includes("..")) return "";
-    return /\.(?:avif|webp|png|jpe?g)$/i.test(value) ? value : "";
+    if (typeof value !== "string" || !/^assets\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_.-]+(?:\?v=[a-zA-Z0-9_-]+)?$/.test(value) || value.includes("..")) return "";
+    return /\.(?:avif|webp|png|jpe?g)(?:\?v=[a-zA-Z0-9_-]+)?$/i.test(value) ? value : "";
   }
   function captionText(frame) {
     const parent = frame.parentElement;

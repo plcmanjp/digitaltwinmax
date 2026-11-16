@@ -9,6 +9,7 @@ const video = (n = 1, extra = {}) => ({ src: `assets/test-video-${n}.mp4`, poste
 test('local media accepts only supported asset paths for the requested kind', () => {
   for (const ext of ['avif', 'webp', 'png', 'jpg', 'jpeg', 'svg', 'WEBP']) assert.equal(localAsset(`assets/approved/a-b_2.${ext}`, 'image'), `assets/approved/a-b_2.${ext}`);
   assert.equal(localAsset('assets/clip.mp4', 'video'), 'assets/clip.mp4');
+  assert.equal(localAsset('assets/clip.mp4?v=pileup-4', 'video'), 'assets/clip.mp4?v=pileup-4');
   assert.equal(localAsset('assets/clip.webm', 'video'), 'assets/clip.webm');
   assert.equal(localAsset('assets/clip-ko.vtt', 'captions'), 'assets/clip-ko.vtt');
   assert.equal(localAsset('assets/description.txt', 'transcript'), 'assets/description.txt');
@@ -430,4 +431,22 @@ test('reduced motion prevents nearby preloading and stage keeps poster state unt
   assert.equal(stage.classList.contains('has-started'), true);
   hero.currentTime = 0; hero.play();
   assert.equal(stage.classList.contains('has-started'), false);
+});
+test('progress bar click and toggle arrow keys seek within video duration', () => {
+  const f = feedFixture();
+  const stage = f.doc.createElement('div');
+  const hero = f.doc.createElement('video');
+  hero.duration = 40;
+  stage.append(hero); hero.parentElement = stage;
+  enhance(hero);
+  const progress = stage.querySelector('.video-progress');
+  const toggle = stage.querySelector('.video-toggle');
+  progress.getBoundingClientRect = () => ({ left: 10, top: 0, width: 200, height: 6, right: 210, bottom: 6 });
+  progress.emit('click', { clientX: 110, stopPropagation() {} });
+  assert.equal(hero.currentTime, 20);
+  assert.equal(stage.classList.contains('has-started'), true);
+  assert.equal(toggle.emit('keydown', { key: 'ArrowRight' }).defaultPrevented, true);
+  assert.equal(hero.currentTime, 25);
+  assert.equal(toggle.emit('keydown', { key: 'ArrowLeft' }).defaultPrevented, true);
+  assert.equal(hero.currentTime, 20);
 });

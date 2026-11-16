@@ -10,6 +10,7 @@
   const notify = document.getElementById("trial-notify");
   const lead = document.getElementById("trial-lead");
   const heroLink = document.getElementById("hero-trial-link");
+  const bottomLink = document.getElementById("bottom-trial-link");
   const leadText = lead ? lead.textContent : "";
   let loading = false;
   const make = (tag, className, text) => {
@@ -24,7 +25,7 @@
     const meta = make("div", "trial-meta");
     meta.append(make("span", "trial-version", `v${result.version}`));
     meta.append(make("span", "trial-badge", result.prerelease ? "사전 공개 체험판" : "공개 체험판"));
-    const date = make("time", "trial-date", new Date(result.publishedAt).toLocaleDateString("ko-KR", { timeZone: "UTC" }));
+    const date = make("time", "trial-date", new Date(result.publishedAt).toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul" }));
     date.dateTime = result.publishedAt;
     meta.append(date);
     detail.append(meta);
@@ -45,6 +46,7 @@
       detail.append(list);
     }
     const notes = make("details", "trial-notes");
+    if (result.assets.length) notes.open = true;
     notes.append(make("summary", "", "릴리스 노트"));
     const excerpt = result.notes.trim();
     notes.append(make("p", "trial-notes-text", excerpt ? excerpt.slice(0, 1600) : "별도로 작성된 릴리스 노트가 없습니다. 공식 Release에서 설치 및 이용 안내를 확인하세요."));
@@ -69,6 +71,7 @@
     if (notify) notify.hidden = true;
     if (lead) lead.textContent = leadText;
     if (heroLink) heroLink.textContent = "체험판 안내";
+    if (bottomLink) bottomLink.textContent = "체험판 안내로 이동 ↑";
     status.textContent = "공개 상태 확인 중";
     message.textContent = "GitHub Releases에서 체험판 정보를 확인하고 있습니다.";
     try {
@@ -83,7 +86,10 @@
         message.textContent = result.state === "available"
           ? "설치 전 릴리스 노트에서 지원 환경과 이용 조건을 확인하고, 사용 중인 Windows에 맞는 파일을 선택하세요."
           : "체험판 소식은 공개되었지만 다운로드할 수 있는 Windows 배포 파일은 아직 없습니다. 공식 Release의 안내를 확인하세요.";
-        if (heroLink && result.state === "available") heroLink.textContent = "체험판 받기";
+        if (result.state === "available") {
+          if (heroLink) heroLink.textContent = "체험판 받기";
+          if (bottomLink) bottomLink.textContent = "체험판 받으러 이동 ↑";
+        }
         showRelease(result);
       }
     } catch (error) {

@@ -68,10 +68,11 @@ function page() {
   return { doc, heroFrame, frame };
 }
 
-test('lightbox image paths stay on local raster files', () => {
+test('lightbox image paths stay on local raster files and allow safe ?v= cache tokens', () => {
   assert.equal(localImage('assets/scene.jpg'), 'assets/scene.jpg');
+  assert.equal(localImage('assets/scene.jpg?v=flow-2'), 'assets/scene.jpg?v=flow-2');
   assert.equal(localImage('assets/approved/a-b_2.WEBP'), 'assets/approved/a-b_2.WEBP');
-  for (const src of ['', 'assets/mark.svg', 'assets/a.jpg?x=1', 'https://example.com/a.jpg', 'assets/../a.jpg', 'javascript:alert(1)']) assert.equal(localImage(src), '');
+  for (const src of ['', 'assets/mark.svg', 'assets/a.jpg?x=1', 'assets/a.jpg?v=1&x=2', 'https://example.com/a.jpg', 'assets/../a.jpg', 'javascript:alert(1)']) assert.equal(localImage(src), '');
 });
 test('a scene opens in a dialog and closes back to the same control', () => {
   const { doc, frame } = page();
