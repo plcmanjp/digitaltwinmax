@@ -27,6 +27,7 @@ body {
   margin:0;
   word-break:keep-all;
   overflow-wrap:break-word;
+  overflow-x:clip;
 }
 a {
   color:inherit;
@@ -197,6 +198,9 @@ img,video {
   font-size:13px;
   min-height:44px;
   font-weight:600;
+}
+.hero-copy,.hero-figure,.feature-copy,.feature-row figure,.trial-intro,.agent-copy,.agent-steps,.agent-steps li,.benefit-list>div,.scene-grid article {
+  min-width:0;
 }
 .hero-figure {
   margin:0;
@@ -833,6 +837,7 @@ img,video {
   display:grid;
   grid-template-columns:1fr 1fr;
   column-gap:64px;
+  min-width:0;
 }
 .trial-guide section {
   padding:26px 0;
@@ -867,7 +872,8 @@ img,video {
   padding:1px 5px;
   background:#e7ebe5;
   color:var(--ink);
-  white-space:nowrap;
+  white-space:normal;
+  overflow-wrap:anywhere;
 }
 .copy-command {
   display:inline-flex;
@@ -891,6 +897,7 @@ img,video {
   grid-column:1/-1;
   padding-top:26px;
   border-top:1px solid var(--line);
+  min-width:0;
 }
 .edition-compare h3 {
   font-size:21px;
@@ -899,6 +906,7 @@ img,video {
   margin-bottom:16px;
 }
 .compare-table-wrap {
+  max-width:100%;
   overflow-x:auto;
 }
 .compare-table {
@@ -1583,7 +1591,7 @@ img,video {
 }
 @media(max-width:1100px) {
   .hero {
-    grid-template-columns:1fr;
+    grid-template-columns:minmax(0,1fr);
     gap:28px;
     align-items:start;
   }
@@ -1613,10 +1621,10 @@ img,video {
     padding:0 16px;
   }
   .agent-link {
-    grid-template-columns:1fr;
+    grid-template-columns:minmax(0,1fr);
   }
   .feature-row,.feature-row.is-flip {
-    grid-template-columns:1fr;
+    grid-template-columns:minmax(0,1fr);
     gap:18px;
   }
   .feature-row.is-flip .feature-copy {
@@ -1624,7 +1632,7 @@ img,video {
   }
   .trial-section {
     gap:48px;
-    grid-template-columns:1fr 1.5fr;
+    grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);
   }
   .footer-bottom {
     gap:10px 20px;
@@ -1812,7 +1820,7 @@ img,video {
     font-size:29px;
   }
   .trial-section {
-    grid-template-columns:1fr;
+    grid-template-columns:minmax(0,1fr);
     gap:36px;
     padding-top:64px;
     padding-bottom:64px;
@@ -1851,8 +1859,17 @@ img,video {
     padding:10px 15px;
     min-height:44px;
   }
+  .edition-compare h3 {
+    font-size:18px;
+  }
+  .compare-table {
+    font-size:13px;
+  }
+  .compare-table th,.compare-table td {
+    padding:10px;
+  }
   .trial-guide {
-    grid-template-columns:1fr;
+    grid-template-columns:minmax(0,1fr);
   }
   .trial-guide ul {
     font-size:14px;
@@ -1938,12 +1955,14 @@ img,video {
   }
   .more-scenes summary {
     width:100%;
+    max-width:100%;
     justify-content:center;
+    text-align:center;
     font-size:13px;
     padding:10px 14px;
   }
   .scene-grid {
-    grid-template-columns:1fr;
+    grid-template-columns:minmax(0,1fr);
     gap:32px;
   }
   .faq {
