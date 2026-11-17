@@ -1338,10 +1338,10 @@ img,video {
   pointer-events:none;
 }
 .hero-video .promo-stage:not(.has-started)::before {
-  background-image:url("assets/promo-main.jpg?v=pileup-4");
+  background-image:url("assets/promo-main.jpg?v=refresh-20261117");
 }
 .usage-overview .promo-stage:not(.has-started)::before {
-  background-image:url("assets/usage-30s.jpg?v=flow-1");
+  background-image:url("assets/usage-36s.jpg?v=refresh-20261117");
 }
 .promo-stage video,.feed-stage video {
   position:relative;
