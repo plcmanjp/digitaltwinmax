@@ -7,13 +7,6 @@ window.DTM_MEDIA = {
   images: [],
   videos: [
     {
-      src: "assets/film-process.mp4",
-      poster: "assets/film-process.jpg",
-      title: "전체 공정과 신호",
-      caption: "샘플 공정을 가상으로 재생하면 아래 신호 시뮬레이터의 값이 함께 바뀝니다.",
-      silent: true
-    },
-    {
       src: "assets/film-feed.mp4",
       poster: "assets/film-feed.jpg",
       title: "공급 매거진",

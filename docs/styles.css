@@ -1338,7 +1338,7 @@ img,video {
   pointer-events:none;
 }
 .hero-video .promo-stage:not(.has-started)::before {
-  background-image:url("assets/promo-main.jpg?v=refresh-20261117");
+  background-image:url("assets/promo-main.jpg?v=trailer-20261118");
 }
 .usage-overview .promo-stage:not(.has-started)::before {
   background-image:url("assets/usage-36s.jpg?v=refresh-20261117");
