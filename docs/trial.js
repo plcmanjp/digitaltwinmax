@@ -79,7 +79,7 @@
         status.textContent = "체험판 준비 중";
         message.textContent = "아직 공개된 체험판이 없습니다. 준비가 되면 이곳에서 다운로드 파일과 이용 안내를 확인할 수 있습니다.";
         if (notify) notify.hidden = false;
-        if (lead) lead.textContent = "공개되면 신청 없이 바로 내려받을 수 있는 무료 체험판입니다. 사용 기한이 없습니다.";
+        if (lead) lead.textContent = "공개되면 신청 없이 바로 다운로드할 수 있는 무료 체험판입니다. 사용 기한이 없습니다.";
       } else {
         if (notify) notify.hidden = true;
         status.textContent = result.state === "available" ? "체험판 다운로드" : "배포 파일 준비 중";
