@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { selectTrial, loadTrial, API_URL } = require('../docs/releases.js');
+const { selectTrial, loadTrial, extractSha256, API_URL } = require('../docs/releases.js');
 const { asset, release, response, cases } = require('./fixtures.cjs');
 
 test('no public release produces an empty state without a download URL', () => {
@@ -86,4 +86,15 @@ test('a slow request is aborted and reported as a timeout', async () => {
   await assert.rejects(loadTrial({ timeoutMs: 10, fetchImpl: async (_url, { signal }) => new Promise((_resolve, reject) => {
     signal.addEventListener('abort', () => reject(new DOMException('Aborted', 'AbortError')), { once: true });
   }) }), { code: 'timeout' });
+});
+test('extractSha256 matches exact asset hashes and rejects ambiguous multi-asset hashes', () => {
+  const hashA = 'a'.repeat(64);
+  const hashB = 'b'.repeat(64);
+  const notes = `SHA-256:\nDigitalTwinMax-Trial-0.2.0-windows-x64.zip: ${hashA.toUpperCase()}\nDigitalTwinMax-Trial-0.2.0-windows-arm64.zip\n${hashB}`;
+  assert.equal(extractSha256(notes, 'DigitalTwinMax-Trial-0.2.0-windows-x64.zip', 2), hashA);
+  assert.equal(extractSha256(notes, 'DigitalTwinMax-Trial-0.2.0-windows-arm64.zip', 2), hashB);
+  assert.equal(extractSha256(`SHA-256: ${hashA}`, 'DigitalTwinMax-Trial-0.2.0-windows-x64.zip', 1), hashA);
+  assert.equal(extractSha256(`SHA-256: ${hashA}`, 'DigitalTwinMax-Trial-0.2.0-windows-x64.zip', 2), '');
+  assert.equal(extractSha256(`SHA-256: ${hashA}\n${hashB}`, 'DigitalTwinMax-Trial-0.2.0-windows-x64.zip', 1), '');
+  assert.equal(extractSha256('short: deadbeef', 'DigitalTwinMax-Trial-0.2.0-windows-x64.zip', 1), '');
 });

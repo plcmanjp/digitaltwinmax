@@ -10,8 +10,17 @@
   const notify = document.getElementById("trial-notify");
   const lead = document.getElementById("trial-lead");
   const heroLink = document.getElementById("hero-trial-link");
+  const headerLink = document.getElementById("header-trial-link");
   const bottomLink = document.getElementById("bottom-trial-link");
+  const bottomCopy = document.getElementById("bottom-trial-copy");
+  const mobileDockLink = document.getElementById("mobile-dock-link");
+  const mobileDockCopy = document.getElementById("mobile-dock-copy");
+  const copyButton = document.getElementById("copy-hash-cmd");
+  const copyStatus = document.getElementById("copy-hash-status");
   const leadText = lead ? lead.textContent : "";
+  const bottomCopyText = bottomCopy ? bottomCopy.textContent : "";
+  const mobileDockCopyText = mobileDockCopy ? mobileDockCopy.textContent : "";
+  let currentHashCommand = "Get-FileHash .\\DigitalTwinMax-Trial-*.zip -Algorithm SHA256";
   let loading = false;
   const make = (tag, className, text) => {
     const element = document.createElement(tag);
@@ -19,7 +28,23 @@
     if (text) element.textContent = text;
     return element;
   };
+  const setLinkLabel = (element, label, symbol, srSuffix = "") => {
+    if (!element) return;
+    element.replaceChildren(document.createTextNode(symbol ? `${label} ` : label));
+    if (symbol) {
+      const icon = make("span", "", symbol);
+      icon.setAttribute("aria-hidden", "true");
+      element.append(icon);
+    }
+    if (srSuffix) element.append(make("span", "sr-only", srSuffix));
+  };
   const sizeLabel = bytes => bytes < 1048576 ? `${Math.ceil(bytes / 1024)} KiB` : `${(bytes / 1048576).toFixed(1)} MiB`;
+  const archLabel = arch => arch === "x64" ? "Windows 64비트 (x64)" : "Windows ARM64 (arm64)";
+  const announceCopy = text => {
+    if (!copyStatus) return;
+    copyStatus.textContent = "";
+    setTimeout(() => { copyStatus.textContent = text; }, 20);
+  };
 
   function showRelease(result) {
     const meta = make("div", "trial-meta");
@@ -30,14 +55,46 @@
     meta.append(date);
     detail.append(meta);
     if (result.assets.length) {
+      const hasMultiArch = new Set(result.assets.map(item => item.arch)).size > 1;
+      currentHashCommand = `Get-FileHash .\\${result.assets[0].name} -Algorithm SHA256`;
       const list = make("ul", "trial-files");
       for (const asset of result.assets) {
         const item = make("li", "trial-file");
         const info = make("div", "trial-file-info");
         const kind = asset.format === "zip" ? "압축 패키지" : "설치 파일";
-        info.append(make("span", "trial-file-platform", `Windows ${asset.arch} / ${kind} ${asset.format.toUpperCase()} (${sizeLabel(asset.size)})`));
+        const platform = make("span", "trial-file-platform", `${archLabel(asset.arch)} / ${kind} ${asset.format.toUpperCase()} (${sizeLabel(asset.size)})`);
+        if (hasMultiArch && asset.arch === "x64" && asset === result.assets[0]) {
+          platform.append(document.createTextNode(" "), make("span", "trial-arch-hint", "일반 PC 권장"));
+        }
+        info.append(platform);
         info.append(make("span", "trial-file-name", asset.name));
-        const link = make("a", "trial-download", "다운로드 ↓");
+        const sha = typeof api.extractSha256 === "function" ? api.extractSha256(result.notes, asset.name, result.assets.length) : "";
+        if (sha) {
+          const hashRow = make("div", "trial-hash");
+          hashRow.append(make("span", "trial-hash-label", "SHA-256"), make("code", "trial-hash-value", `${sha.slice(0, 12)}...${sha.slice(-12)}`));
+          if (navigator.clipboard?.writeText) {
+            const btn = make("button", "copy-command is-compact", "해시 복사");
+            btn.type = "button";
+            btn.setAttribute("aria-label", `${asset.name} SHA-256 해시 복사`);
+            let hashTimer;
+            btn.addEventListener("click", async () => {
+              try {
+                await navigator.clipboard.writeText(sha);
+                btn.textContent = "복사됨";
+                announceCopy(`${asset.name}의 SHA-256 해시를 복사했습니다.`);
+                clearTimeout(hashTimer);
+                hashTimer = setTimeout(() => { btn.textContent = "해시 복사"; }, 2000);
+              } catch {
+                btn.textContent = "직접 복사";
+                announceCopy("자동 복사에 실패했습니다. 릴리스 노트에서 직접 복사해 주세요.");
+              }
+            });
+            hashRow.append(btn);
+          }
+          info.append(hashRow);
+        }
+        const link = make("a", "trial-download");
+        setLinkLabel(link, "다운로드", "↓");
         link.href = asset.url;
         link.setAttribute("aria-label", `${asset.name} 다운로드, GitHub Releases 파일`);
         item.append(info, link);
@@ -52,7 +109,8 @@
     notes.append(make("p", "trial-notes-text", excerpt ? excerpt.slice(0, 1600) : "별도로 작성된 릴리스 노트가 없습니다. 공식 Release에서 설치 및 이용 안내를 확인하세요."));
     if (excerpt.length > 1600) notes.append(make("p", "trial-note-limit", "노트의 앞부분만 표시합니다. 전체 내용은 공식 Release에서 확인하세요."));
     detail.append(notes);
-    const link = make("a", "text-link trial-release-link", "공식 Release와 전체 노트 ↗ (새 탭)");
+    const link = make("a", "text-link trial-release-link");
+    setLinkLabel(link, "공식 Release와 전체 노트", "↗", " (새 탭)");
     link.href = result.url;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
@@ -68,9 +126,14 @@
     panel.setAttribute("aria-busy", "true");
     detail.replaceChildren();
     detail.hidden = true;
+    currentHashCommand = "Get-FileHash .\\DigitalTwinMax-Trial-*.zip -Algorithm SHA256";
     if (lead) lead.textContent = leadText;
     if (heroLink) heroLink.textContent = "체험판 안내";
-    if (bottomLink) bottomLink.textContent = "체험판 안내로 이동 ↑";
+    if (headerLink) headerLink.textContent = "체험판 안내";
+    if (mobileDockLink) mobileDockLink.textContent = "체험판 안내";
+    if (mobileDockCopy) mobileDockCopy.textContent = mobileDockCopyText;
+    if (bottomLink) setLinkLabel(bottomLink, "체험판 안내로 이동", "↑");
+    if (bottomCopy) bottomCopy.textContent = bottomCopyText;
     status.textContent = "공개 상태 확인 중";
     message.textContent = "GitHub Releases에서 체험판 정보를 확인하고 있습니다.";
     try {
@@ -80,6 +143,8 @@
         message.textContent = "아직 공개된 체험판이 없습니다. 준비가 되면 이곳에서 다운로드 파일과 이용 안내를 확인할 수 있습니다.";
         if (notify) notify.hidden = false;
         if (lead) lead.textContent = "공개되면 신청 없이 바로 다운로드할 수 있는 무료 체험판입니다. 사용 기한이 없습니다.";
+        if (bottomCopy) bottomCopy.textContent = "공개되면 신청 없이 바로 받을 수 있는 무료 체험판입니다. 사용 기한이 없습니다.";
+        if (mobileDockCopy) mobileDockCopy.textContent = "무료 체험판 공개 알림";
       } else {
         if (notify) notify.hidden = true;
         status.textContent = result.state === "available" ? "체험판 다운로드" : "배포 파일 준비 중";
@@ -88,7 +153,11 @@
           : "체험판 소식은 공개되었지만 다운로드할 수 있는 Windows 배포 파일은 아직 없습니다. 공식 Release의 안내를 확인하세요.";
         if (result.state === "available") {
           if (heroLink) heroLink.textContent = "체험판 받기";
-          if (bottomLink) bottomLink.textContent = "체험판 받으러 이동 ↑";
+          if (headerLink) headerLink.textContent = "체험판 받기";
+          if (mobileDockLink) mobileDockLink.textContent = "체험판 받기";
+          if (mobileDockCopy) mobileDockCopy.textContent = `무료 체험판 v${result.version}`;
+          if (bottomLink) setLinkLabel(bottomLink, "체험판 받으러 이동", "↑");
+          if (bottomCopy) bottomCopy.textContent = "신청 없이 바로 다운로드할 수 있는 무료 체험판입니다. 사용 기한이 없습니다.";
         }
         showRelease(result);
       }
@@ -109,18 +178,19 @@
   }
   retry.hidden = false;
   retry.addEventListener("click", refresh);
-  const copyButton = document.getElementById("copy-hash-cmd");
   if (copyButton && navigator.clipboard?.writeText) {
     copyButton.hidden = false;
     let copyTimer;
     copyButton.addEventListener("click", async () => {
       try {
-        await navigator.clipboard.writeText("Get-FileHash .\\DigitalTwinMax-Trial-*.zip -Algorithm SHA256");
+        await navigator.clipboard.writeText(currentHashCommand);
         copyButton.textContent = "복사됨";
+        announceCopy("PowerShell SHA-256 확인 명령을 복사했습니다.");
         clearTimeout(copyTimer);
         copyTimer = setTimeout(() => { copyButton.textContent = "명령 복사"; }, 2000);
       } catch {
         copyButton.textContent = "직접 복사해 주세요";
+        announceCopy("자동 복사에 실패했습니다. 명령을 직접 복사해 주세요.");
       }
     });
   }

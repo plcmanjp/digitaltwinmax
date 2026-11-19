@@ -15,7 +15,9 @@ function response(data, status = 200, link = '') {
 }
 const cases = {
   empty: [],
-  available: [release('0.2.0-beta.1', { prerelease: true, assets: [
+  available: [release('0.2.0-beta.1', { prerelease: true,
+    body: '테스트용 릴리스 노트입니다. 실제 배포 파일이 아닙니다.\n지원 환경과 이용 조건은 공개 전에 작성합니다.\n\nSHA-256 (합성 테스트 값):\nDigitalTwinMax-Trial-0.2.0-beta.1-windows-x64.zip: a1b2c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0',
+    assets: [
     asset('0.2.0-beta.1', 'arm64', 'zip'), asset('0.2.0-beta.1', 'x64', 'msi'),
     asset('0.2.0-beta.1', 'x64', 'exe'), asset('0.2.0-beta.1', 'x64', 'zip'),
     { name: 'Source code.zip', state: 'uploaded', size: 1024, browser_download_url: `${repo}/archive/source.zip` }

@@ -332,6 +332,7 @@
   function autoplayController(doc) {
     if (controllers.has(doc)) return controllers.get(doc);
     const win = doc.defaultView;
+    const saveData = Boolean(win?.navigator?.connection?.saveData);
     const states = new Map();
     let active = null;
     const start = video => {
@@ -369,7 +370,7 @@
         }
       }
       states.forEach((state, video) => { if (video !== active && !video.paused) video.pause(); });
-      if (active && active.paused && !states.get(active).userPaused) start(active);
+      if (active && active.paused && !states.get(active).userPaused && !saveData) start(active);
     }
     const observer = win.IntersectionObserver ? new win.IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -385,7 +386,7 @@
     }, { threshold: [0, .15, .25, .35, PLAY_RATIO, .6, .75, .9, 1] }) : null;
     const nearby = win.IntersectionObserver ? new win.IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (entry.intersectionRatio > 0 || entry.isIntersecting) entry.target.preload = "auto";
+        if (!saveData && (entry.intersectionRatio > 0 || entry.isIntersecting)) entry.target.preload = "auto";
       });
     }, { rootMargin: "200px 0px 100% 0px" }) : null;
     doc.addEventListener("visibilitychange", refresh);
@@ -399,7 +400,7 @@
         });
         video.addEventListener("canplay", () => {
           const state = states.get(video);
-          if (active === video && video.paused && state && !state.userPaused && !doc.hidden) start(video);
+          if (active === video && video.paused && state && !state.userPaused && !saveData && !doc.hidden) start(video);
         });
         observer?.observe(video);
         nearby?.observe(video);
@@ -434,9 +435,18 @@
     button.append(icon);
     const progress = doc.createElement("span");
     progress.className = "video-progress";
-    progress.setAttribute("aria-hidden", "true");
+    progress.setAttribute("role", "slider");
+    progress.setAttribute("aria-label", `${label} 재생 위치`);
+    progress.setAttribute("aria-valuemin", "0");
+    progress.setAttribute("aria-valuemax", "0");
+    progress.setAttribute("aria-valuenow", "0");
+    progress.tabIndex = 0;
+    const rail = doc.createElement("span");
+    rail.className = "video-progress-rail";
     const bar = doc.createElement("span");
-    progress.append(bar);
+    bar.className = "video-progress-fill";
+    rail.append(bar);
+    progress.append(rail);
     const timeLabel = doc.createElement("span");
     timeLabel.className = "video-time";
     timeLabel.setAttribute("aria-hidden", "true");
@@ -456,12 +466,24 @@
       const ratio = duration > 0 ? Math.min(1, Math.max(0, current / duration)) : 0;
       if (bar.style) bar.style.transform = `scaleX(${ratio})`;
       if (duration > 0) {
-        timeLabel.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+        const text = `${formatTime(current)} / ${formatTime(duration)}`;
+        timeLabel.textContent = text;
         timeLabel.hidden = false;
+        progress.setAttribute("aria-valuemax", String(Math.round(duration)));
+        progress.setAttribute("aria-valuenow", String(Math.round(current)));
+        progress.setAttribute("aria-valuetext", text);
       }
       if (!stage.classList.contains("has-started") && current >= 0.12) {
         stage.classList.add("has-started");
       }
+    };
+    const seekByDelta = step => {
+      const duration = Number(video.duration);
+      if (!(duration > 0)) return false;
+      video.currentTime = Math.min(duration, Math.max(0, (Number(video.currentTime) || 0) + step));
+      updateProgress();
+      syncStarted();
+      return true;
     };
     const seekToRatio = ratio => {
       const duration = Number(video.duration);
@@ -509,19 +531,27 @@
       event.stopPropagation?.();
       seekFromEvent(event);
     });
+    progress.addEventListener("keydown", event => {
+      const duration = Number(video.duration);
+      if (!(duration > 0)) return;
+      if (event.key === "ArrowLeft" && seekByDelta(-5)) event.preventDefault();
+      else if (event.key === "ArrowRight" && seekByDelta(5)) event.preventDefault();
+      else if (event.key === "Home" && seekToRatio(0)) event.preventDefault();
+      else if (event.key === "End" && seekToRatio(1)) event.preventDefault();
+    });
     button.addEventListener("keydown", event => {
       const step = { ArrowLeft: -5, ArrowRight: 5 }[event.key];
-      const duration = Number(video.duration);
-      if (!step || !(duration > 0)) return;
-      event.preventDefault();
-      video.currentTime = Math.min(duration, Math.max(0, (Number(video.currentTime) || 0) + step));
-      updateProgress();
-      syncStarted();
+      if (!step) return;
+      if (seekByDelta(step)) event.preventDefault();
     });
     button.addEventListener("click", () => controller.toggle(video));
     video.addEventListener("click", () => controller.toggle(video));
     const full = attachFullscreen(video, stage, controller, label);
-    stage.append(button, timeLabel, full, progress);
+    const controls = doc.createElement("div");
+    controls.className = "video-controls";
+    controls.append(button, progress, timeLabel, full);
+    stage.append(controls);
+    stage.classList.add("has-controls");
     sync();
     return button;
   }
@@ -579,6 +609,22 @@
     const controller = autoplayController(video.ownerDocument);
     prepareInline(video);
     const stage = video.parentElement;
+    const doc = video.ownerDocument;
+    const failure = doc.createElement("div");
+    failure.className = "media-failure";
+    failure.hidden = true;
+    failure.setAttribute("role", "status");
+    const failTitle = doc.createElement("strong");
+    failTitle.textContent = "영상을 불러올 수 없습니다.";
+    const failBody = doc.createElement("span");
+    failBody.textContent = "잠시 후 페이지를 새로고침해 주세요.";
+    failure.append(failTitle, failBody);
+    stage.append(failure);
+    video.addEventListener("error", () => {
+      video.pause();
+      (stage.parentElement || stage).classList.add("media-error");
+      failure.hidden = false;
+    }, { once: true });
     const button = attachControls(video, stage, controller, label || video.getAttribute("aria-label") || "영상");
     const container = stage.parentElement;
     const chapters = container?.querySelectorAll
@@ -586,16 +632,47 @@
       : [];
     if (chapters.length) {
       const points = chapters.map(node => ({ node, time: Math.max(0, Number(node.getAttribute("data-seek")) || 0) }));
+      const chaptersWrap = points[0]?.node.parentElement || null;
+      let pendingSeek = null;
+      let lastActiveIdx = -1;
       const syncChapters = () => {
         const now = Math.max(0, Number(video.currentTime) || 0);
         let activeIdx = 0;
         points.forEach((pt, idx) => { if (now >= pt.time - 0.15) activeIdx = idx; });
         points.forEach((pt, idx) => pt.node.setAttribute("aria-current", String(idx === activeIdx)));
+        if (activeIdx !== lastActiveIdx && chaptersWrap && chaptersWrap.scrollWidth > chaptersWrap.clientWidth && typeof chaptersWrap.scrollTo === "function") {
+          const activeNode = points[activeIdx].node;
+          if (Number.isFinite(activeNode.offsetLeft) && Number.isFinite(activeNode.offsetWidth)) {
+            const left = Math.max(0, activeNode.offsetLeft - (chaptersWrap.clientWidth - activeNode.offsetWidth) / 2);
+            const reduced = doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+            chaptersWrap.scrollTo({ left, behavior: reduced || lastActiveIdx < 0 ? "auto" : "smooth" });
+          }
+        }
+        lastActiveIdx = activeIdx;
       };
+      const applySeek = time => {
+        const ready = Number(video.duration) > 0 || Number(video.readyState) >= 1;
+        if (!ready) {
+          pendingSeek = time;
+          if (video.preload === "none") video.preload = "auto";
+          return;
+        }
+        pendingSeek = null;
+        try { video.currentTime = time; } catch { /* metadata pending */ }
+      };
+      video.addEventListener("loadedmetadata", () => {
+        if (pendingSeek === null) return;
+        const target = pendingSeek;
+        pendingSeek = null;
+        try { video.currentTime = target; } catch { /* ignore */ }
+        if (target >= 0.12) stage.classList.add("has-started");
+        syncChapters();
+      });
       points.forEach(({ node, time }) => {
         node.addEventListener("click", () => {
-          try { video.currentTime = time; } catch { /* metadata pending */ }
-          stage.classList.toggle("has-started", time >= 0.12);
+          const alreadyStarted = stage.classList.contains("has-started");
+          applySeek(time);
+          if (time >= 0.12 || alreadyStarted) stage.classList.add("has-started");
           if (video.paused) controller.toggle(video);
           syncChapters();
         });

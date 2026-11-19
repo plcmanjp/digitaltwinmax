@@ -11,9 +11,17 @@
   }
   function captionText(frame) {
     const parent = frame.parentElement;
-    const node = parent && (parent.querySelector("figcaption") || parent.querySelector("h3"));
-    const text = node && typeof node.textContent === "string" ? node.textContent.trim() : "";
-    return text.slice(0, 240);
+    if (!parent) return "";
+    const figcaption = parent.querySelector("figcaption");
+    if (figcaption && typeof figcaption.textContent === "string" && figcaption.textContent.trim()) {
+      return figcaption.textContent.trim().slice(0, 240);
+    }
+    const heading = parent.querySelector("h3");
+    const title = heading && typeof heading.textContent === "string" ? heading.textContent.trim() : "";
+    const note = parent.querySelector("p");
+    const desc = note && typeof note.textContent === "string" ? note.textContent.trim() : "";
+    const combined = title && desc ? `${title}: ${desc}` : title || desc;
+    return combined.slice(0, 240);
   }
   function mount(doc) {
     if (!doc || doc.querySelector(".lightbox")) return null;
@@ -87,6 +95,11 @@
       image.alt = source.getAttribute("alt") || "";
       caption.textContent = captionText(frame) || image.alt;
       if (!keepOpener) opener = frame;
+      if (typeof doc.querySelectorAll === "function") {
+        [...doc.querySelectorAll("video")].forEach(video => {
+          if (video && !video.paused && typeof video.pause === "function") video.pause();
+        });
+      }
       if (!dialog.open && !dialog.hasAttribute?.("open") && dialog.getAttribute("open") == null) {
         if (typeof dialog.showModal === "function") dialog.showModal();
         else dialog.setAttribute("open", "");

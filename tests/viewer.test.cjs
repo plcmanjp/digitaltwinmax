@@ -136,3 +136,19 @@ test('a page without zoom frames does not create a dialog', () => {
   const doc = { body: null, createElement() { throw new Error('unexpected'); }, querySelector() { return null; }, querySelectorAll() { return []; } };
   assert.equal(mount(doc), null);
 });
+test('lightbox combines article title and paragraph and pauses playing videos on open', () => {
+  const { doc, frame } = page();
+  const note = doc.createElement('p');
+  note.textContent = '컨베이어 배치 설명';
+  frame.parentElement.append(note);
+  const video = doc.createElement('video');
+  video.paused = false;
+  let pausedCount = 0;
+  video.pause = () => { video.paused = true; pausedCount++; };
+  doc.body.append(video);
+  const api = mount(doc);
+  assert.equal(api.open(frame), true);
+  assert.equal(api.dialog.querySelector('figcaption').textContent, '<script>alert(1)</script>: 컨베이어 배치 설명');
+  assert.equal(pausedCount, 1);
+  assert.equal(video.paused, true);
+});

@@ -89,5 +89,29 @@
       clearTimeout(timer);
     }
   }
-  return Object.freeze({ RELEASES_URL, API_URL, selectTrial, loadTrial, ReleaseError });
+  const HASH_PATTERN = /\b([0-9a-fA-F]{64})\b/g;
+
+  function extractSha256(notes, assetName, assetCount = 1) {
+    if (typeof notes !== "string" || !notes.trim() || typeof assetName !== "string" || !assetName) return "";
+    const lines = notes.split(/\r?\n/);
+    for (let i = 0; i < lines.length; i++) {
+      if (!lines[i].includes(assetName)) continue;
+      const sameLine = lines[i].match(/\b([0-9a-fA-F]{64})\b/);
+      if (sameLine) return sameLine[1].toLowerCase();
+      if (i + 1 < lines.length) {
+        const nextLine = lines[i + 1].match(/\b([0-9a-fA-F]{64})\b/);
+        if (nextLine && !/DigitalTwinMax-Trial-/.test(lines[i + 1])) return nextLine[1].toLowerCase();
+      }
+    }
+    if (assetCount === 1) {
+      const unique = new Set();
+      let match;
+      HASH_PATTERN.lastIndex = 0;
+      while ((match = HASH_PATTERN.exec(notes)) !== null) unique.add(match[1].toLowerCase());
+      if (unique.size === 1) return [...unique][0];
+    }
+    return "";
+  }
+
+  return Object.freeze({ RELEASES_URL, API_URL, selectTrial, loadTrial, extractSha256, ReleaseError });
 });
