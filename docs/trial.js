@@ -10,6 +10,7 @@
   const notify = document.getElementById("trial-notify");
   const lead = document.getElementById("trial-lead");
   const heroLabel = document.getElementById("hero-trial-label");
+  const headerLink = document.getElementById("header-trial-link");
   const bottomLink = document.getElementById("bottom-trial-link");
   const bottomCopy = document.getElementById("bottom-trial-copy");
   const mobileDockLink = document.getElementById("mobile-dock-link");
@@ -128,6 +129,7 @@
     currentHashCommand = "Get-FileHash .\\DigitalTwinMax-Trial-*.zip -Algorithm SHA256";
     if (lead) lead.textContent = leadText;
     if (heroLabel) heroLabel.textContent = "Windows 체험판 안내";
+    if (headerLink) headerLink.textContent = "체험판 안내";
     if (mobileDockLink) mobileDockLink.textContent = "체험판 안내";
     if (mobileDockCopy) mobileDockCopy.textContent = mobileDockCopyText;
     if (bottomLink) setLinkLabel(bottomLink, "체험판 안내로 이동", "↑");
@@ -150,7 +152,8 @@
           ? "릴리스 노트에서 지원 환경과 이용 조건을 확인하고, 사용 중인 Windows에 맞는 파일을 선택하세요."
           : "체험판 소식은 공개되었지만 다운로드할 수 있는 Windows 배포 파일은 아직 없습니다. 공식 Release의 안내를 확인하세요.";
         if (result.state === "available") {
-          if (heroLabel) heroLabel.textContent = "Windows 체험판 받기";
+          if (heroLabel) heroLabel.textContent = `Windows 체험판 받기 (v${result.version})`;
+          if (headerLink) headerLink.textContent = "체험판 받기";
           if (mobileDockLink) mobileDockLink.textContent = "체험판 받기";
           if (mobileDockCopy) mobileDockCopy.textContent = `무료 체험판 v${result.version}`;
           if (bottomLink) setLinkLabel(bottomLink, "체험판 받으러 이동", "↑");

@@ -12,7 +12,7 @@
   openTargetDetails(window.location.hash);
 
   // Desktop scrollspy for sticky navigation
-  const navLinks = [...document.querySelectorAll('.site-header nav a[href^="#"]')];
+  const navLinks = [...document.querySelectorAll('.site-header nav a[href^="#"], #header-trial-link')];
   const trackedSections = navLinks
     .map(link => ({ link, id: link.getAttribute("href").slice(1), section: document.getElementById(link.getAttribute("href").slice(1)) }))
     .filter(item => item.section);
@@ -86,10 +86,25 @@
     });
   }
 
+  // Subtle reveal animation for cards and sections when motion is allowed
+  const revealItems = [...document.querySelectorAll(".reveal-item")];
+  const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  if (revealItems.length && window.IntersectionObserver && !reducedMotion) {
+    document.documentElement.classList.add("reveal-ready");
+    const revealObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-revealed");
+        obs.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+    revealItems.forEach(el => revealObserver.observe(el));
+  }
+
   // Mobile bottom CTA dock: show only after leaving hero and hide while viewing #trial
   const mobileDock = document.getElementById("mobile-dock");
   const mobileDockLink = document.getElementById("mobile-dock-link");
-  const heroSection = document.querySelector(".landing-hero");
+  const heroSection = document.querySelector(".hero-section");
   const trialSection = document.getElementById("trial");
   if (mobileDock && heroSection && trialSection && window.IntersectionObserver) {
     let heroVisible = true;
@@ -110,31 +125,6 @@
     dockObserver.observe(heroSection);
     dockObserver.observe(trialSection);
     syncDock();
-  }
-
-  const filmLink = document.querySelector(".film-link");
-  const filmViewer = document.getElementById("film-viewer");
-  const mainFilm = document.getElementById("main-film");
-  if (filmLink && mainFilm && typeof filmViewer?.showModal === "function") {
-    filmLink.addEventListener("click", event => {
-      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-      event.preventDefault();
-      if (!mainFilm.hasAttribute("src")) mainFilm.src = filmLink.href;
-      filmViewer.showModal();
-      mainFilm.currentTime = 0;
-      mainFilm.play().catch(() => { /* The visitor can still use the playback controls. */ });
-    });
-    filmViewer.querySelector(".dismiss").addEventListener("click", () => filmViewer.close());
-    filmViewer.addEventListener("click", event => {
-      if (event.target !== filmViewer || event.detail === 0) return;
-      const box = filmViewer.getBoundingClientRect();
-      if (event.clientX < box.left || event.clientX > box.right ||
-          event.clientY < box.top || event.clientY > box.bottom) filmViewer.close();
-    });
-    filmViewer.addEventListener("close", () => {
-      mainFilm.pause();
-      filmLink.focus({ preventScroll: true });
-    });
   }
 
   if (!window.DTMMedia) return;
