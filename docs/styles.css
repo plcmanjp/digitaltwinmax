@@ -266,7 +266,7 @@ html.reveal-ready .reveal-item.is-revealed {
   bottom: 44px;
 }
 .hero-video .promo-stage:not(.has-started)::before {
-  background-image: url("assets/promo-main.jpg?v=trailer-20261118");
+  background-image: url("assets/promo-main.jpg?v=y10-c83ede03");
 }
 .usage-overview .promo-stage:not(.has-started)::before {
   background-image: url("assets/usage-36s.jpg?v=refresh-20261117");
