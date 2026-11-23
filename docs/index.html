@@ -24,7 +24,7 @@
   <meta name="twitter:image" content="https://plcmanjp.github.io/digitaltwinmax/assets/og-image.jpg?v=v285-20261121">
   <link rel="canonical" href="https://plcmanjp.github.io/digitaltwinmax/">
   <link rel="icon" type="image/svg+xml" href="assets/mark.svg?v=brand-3">
-  <link rel="stylesheet" href="styles.css?v=v285-20261121-r2">
+  <link rel="stylesheet" href="styles.css?v=v285-20261123-r1">
   <link rel="stylesheet" href="hero.css?v=hybrid-20261120">
   <script src="media-config.js?v=v285-20261121" defer></script>
   <script src="media.js?v=ux2-20261119" defer></script>
@@ -62,6 +62,7 @@
           <a href="#features">워크플로</a>
           <a href="#capabilities">핵심 기술</a>
           <a href="#motion">실습 장면</a>
+          <a href="#roadmap">학습 로드맵</a>
           <a href="#faq">FAQ</a>
         </nav>
         <a class="header-cta" id="header-trial-link" href="#trial">체험판 안내</a>
@@ -312,9 +313,10 @@
               <span class="cap-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="14,3 6,3 6,21 18,21 18,7 14,3"/><polyline points="14,3 14,7 18,7"/><line x1="12" y1="10" x2="12" y2="17"/><polyline points="9,14 12,17 15,14"/></svg></span>
             </div>
             <h3>STEP 임포트와 프로젝트 저장</h3>
-            <p class="bento-desc">제품판은 설계한 STEP 파일(.step, .stp)을 바로 불러옵니다. 체험판과 제품판 모두 설정한 프로젝트를 저장해 다음 검토에 다시 엽니다.</p>
+            <p class="bento-desc">입문용 소형 장비부터 다축 공정 셀까지 설계한 STEP 파일(.step, .stp)을 제품판에서 바로 불러옵니다. 체험판과 제품판 모두 설정한 프로젝트를 저장해 다시 엽니다.</p>
             <ul class="bento-chips">
               <li>STEP 직접 열기 (제품판)</li>
+              <li>다축 어셈블리 지원</li>
               <li>설정 저장 및 재개방</li>
             </ul>
           </article>
@@ -373,6 +375,145 @@
           </div>
         </details>
         <p class="scene-note">동작 영상과 스틸 화면은 실제 PLC 없이 내장 가상 PLC로 촬영했습니다.</p>
+      </div>
+    </section>
+
+    <section class="roadmap-section" id="roadmap" aria-labelledby="roadmap-title">
+      <div class="wrap">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow" lang="en">TUTORIAL ROADMAP</p>
+            <h2 id="roadmap-title">기초 조작부터 다축 공정까지 <span>단계별 학습 설비 로드맵</span></h2>
+          </div>
+          <p class="section-description">현재 체험판에는 초급 MINI MPS가 포함되어 있으며, 인터랙티브 기초반과 다축 중급 설비를 순차적으로 확장하고 있습니다.</p>
+        </div>
+
+        <ol class="roadmap-grid" aria-label="단계별 튜토리얼 설비 로드맵">
+          <li class="roadmap-card is-upcoming reveal-item">
+            <div class="roadmap-card-head">
+              <span class="roadmap-step" lang="en">STEP 01 / BASIC</span>
+              <span class="roadmap-status is-upcoming">추가 예정</span>
+            </div>
+            <figure class="roadmap-hero">
+              <button type="button" class="zoom-frame" aria-haspopup="dialog">
+                <img src="assets/roadmap-starter-render.jpg?v=roadmap-20261123" width="1280" height="720" loading="lazy" alt="기초반 학습 설비 Starter Workbench의 3D 모델 미리보기. 단축 푸셔 실린더, 미니 컨베이어, 광전 센서와 시작 및 정지 버튼 조작함이 배치되어 있다.">
+                <span class="zoom-badge"><span aria-hidden="true">+ </span>확대</span>
+              </button>
+              <figcaption>3D 장비 모델 미리보기(렌더) / 현재 체험판 미포함</figcaption>
+            </figure>
+            <div class="roadmap-body">
+              <h3>기초반: Starter Workbench</h3>
+              <p class="roadmap-desc">화면 조작과 부품 선택부터 실린더, 컨베이어, 센서 부착과 3D 버튼 클릭까지 단계별 인터랙티브 안내로 익히는 입문용 설비입니다.</p>
+              <ul class="roadmap-chips" aria-label="기초반 설비 구성">
+                <li>단축 푸셔</li>
+                <li>미니 컨베이어</li>
+                <li>광전 센서</li>
+                <li>시작/정지 버튼</li>
+              </ul>
+              <div class="roadmap-subgrid" aria-label="기초반 상세 미리보기">
+                <figure class="roadmap-sub">
+                  <button type="button" class="zoom-frame" aria-haspopup="dialog">
+                    <img src="assets/roadmap-starter-app.jpg?v=roadmap-20261123" width="1280" height="720" loading="lazy" alt="실제 앱 3D 뷰포트에서 Starter Workbench를 내장 가상 PLC로 구동 시험하는 화면. 푸셔가 전진해 워크가 컨베이어로 이동하고 녹색 센서 광선이 워크를 감지하고 있다.">
+                    <span class="zoom-badge"><span aria-hidden="true">+ </span>확대</span>
+                  </button>
+                  <figcaption>실제 앱 3D 구동 시험 화면 (내장 가상 PLC)</figcaption>
+                </figure>
+                <figure class="roadmap-sub">
+                  <button type="button" class="zoom-frame" aria-haspopup="dialog">
+                    <img src="assets/roadmap-starter-switch.jpg?v=roadmap-20261123" width="1280" height="720" loading="lazy" alt="Starter Workbench 전면 조작함 확대 3D 렌더. 녹색 시작 스위치와 적색 정지 스위치가 일체형 프레임에 나란히 배치되고 옆에 표시등이 있다.">
+                    <span class="zoom-badge"><span aria-hidden="true">+ </span>확대</span>
+                  </button>
+                  <figcaption>조작함 시작/정지 스위치 상세(렌더)</figcaption>
+                </figure>
+              </div>
+            </div>
+            <p class="roadmap-meta">설비 3D 모델 앱 구동 시험 완료, 기초 인터랙티브 안내 준비 중</p>
+          </li>
+
+          <li class="roadmap-card is-current reveal-item">
+            <div class="roadmap-card-head">
+              <span class="roadmap-step" lang="en">STEP 02 / BEGINNER</span>
+              <span class="roadmap-status is-current">현재 체험판 포함</span>
+            </div>
+            <figure class="roadmap-hero">
+              <button type="button" class="zoom-frame" aria-haspopup="dialog">
+                <img src="assets/app-scene-top.jpg?v=v285-20261121" width="1920" height="1080" loading="lazy" alt="현재 무료 체험판에 내장된 MINI MPS 교육 장비의 실제 앱 위 시점 화면. 공급 매거진, 컨베이어, 진공 이송축, 초록 적재함과 빨간 배출 통이 보인다.">
+                <span class="zoom-badge"><span aria-hidden="true">+ </span>확대</span>
+              </button>
+              <figcaption>실제 앱 화면 / 무료 체험판 기본 포함</figcaption>
+            </figure>
+            <div class="roadmap-body">
+              <h3>초급: MINI MPS 교육 장비</h3>
+              <p class="roadmap-desc">공급 매거진, 이송 컨베이어, 진공 흡착 이송, 색상과 재질 분류까지 직접 작성한 PLC 래더로 바로 시운전해 볼 수 있는 핵심 실습 설비입니다.</p>
+              <ul class="roadmap-chips" aria-label="초급 설비 구성">
+                <li>358부품</li>
+                <li>공급 매거진</li>
+                <li>진공 흡착 이송</li>
+                <li>색상 분류</li>
+              </ul>
+              <div class="roadmap-included-box">
+                <p>지금 공개되는 무료 체험판에서 내장 가상 실행과 미쓰비시 Q PLC 연동까지 바로 실습할 수 있습니다.</p>
+                <div class="roadmap-included-actions">
+                  <a class="roadmap-card-cta" href="#trial">무료 체험판 안내 보기 <span aria-hidden="true">↓</span></a>
+                  <a class="roadmap-card-link" href="#motion">동작 영상 보기</a>
+                </div>
+              </div>
+            </div>
+            <p class="roadmap-meta">무료 체험판 기본 내장 (기한 제한 없음, 설정 저장 및 재개방 지원)</p>
+          </li>
+
+          <li class="roadmap-card is-upcoming reveal-item">
+            <div class="roadmap-card-head">
+              <span class="roadmap-step" lang="en">STEP 03 / INTERMEDIATE</span>
+              <span class="roadmap-status is-upcoming">추가 예정</span>
+            </div>
+            <figure class="roadmap-hero">
+              <button type="button" class="zoom-frame" aria-haspopup="dialog">
+                <img src="assets/roadmap-chamber-render.jpg?v=roadmap-20261123" width="1280" height="720" loading="lazy" alt="중급 학습 설비 챔버 로더/언로더 셀의 3D 모델 미리보기. 듀얼 갠트리 로더, 2연속 공정 챔버, 버퍼 스테이지와 안전 펜스가 구성되어 있다.">
+                <span class="zoom-badge"><span aria-hidden="true">+ </span>확대</span>
+              </button>
+              <figcaption>3D 장비 모델 미리보기(렌더) / 현재 체험판 미포함</figcaption>
+            </figure>
+            <div class="roadmap-body">
+              <h3>중급: 챔버 로더/언로더 셀</h3>
+              <p class="roadmap-desc">듀얼 갠트리 이송축과 2연속 공정 챔버, 버퍼 스테이지로 구성된 다축 자동화 설비입니다. 실무형 공정 시퀀스와 인터록 검증을 목표로 준비 중입니다.</p>
+              <ul class="roadmap-chips" aria-label="중급 설비 구성">
+                <li>듀얼 갠트리</li>
+                <li>2연속 공정 챔버</li>
+                <li>트레이/지그 이송</li>
+                <li>다축 인터록</li>
+              </ul>
+              <div class="roadmap-subgrid" aria-label="중급 상세 미리보기">
+                <figure class="roadmap-sub">
+                  <button type="button" class="zoom-frame" aria-haspopup="dialog">
+                    <img src="assets/roadmap-chamber-transfer.jpg?v=roadmap-20261123" width="1280" height="720" loading="lazy" alt="챔버 로더/언로더 셀의 듀얼 갠트리가 버퍼와 개방된 공정 챔버 사이를 이송하는 3D 렌더 미리보기.">
+                    <span class="zoom-badge"><span aria-hidden="true">+ </span>확대</span>
+                  </button>
+                  <figcaption>듀얼 갠트리 이송 미리보기(렌더)</figcaption>
+                </figure>
+                <figure class="roadmap-sub">
+                  <button type="button" class="zoom-frame" aria-haspopup="dialog">
+                    <img src="assets/roadmap-chamber-open.jpg?v=roadmap-20261123" width="1280" height="720" loading="lazy" alt="공정 챔버 커버가 열리고 상단 이송 그리퍼가 대기하는 상세 3D 렌더 미리보기.">
+                    <span class="zoom-badge"><span aria-hidden="true">+ </span>확대</span>
+                  </button>
+                  <figcaption>공정 챔버 개방 및 이송 헤드 상세(렌더)</figcaption>
+                </figure>
+              </div>
+            </div>
+            <p class="roadmap-meta">다축 설비 3D 모델 설계 완료, 다부품 이송과 센서 연동 고도화 중</p>
+          </li>
+        </ol>
+
+        <div class="roadmap-cta-bar reveal-item">
+          <div class="roadmap-cta-copy">
+            <strong>새 학습 설비 공개 소식과 원하는 설비 제안</strong>
+            <p>기초반과 중급 설비는 현재 체험판에 포함되지 않은 추가 예정 항목이며, 공개 일정과 최종 구성은 개발 진행에 따라 조정될 수 있습니다. 공개 알림을 구독하거나 연습해 보고 싶은 자동화 설비를 제안해 주세요.</p>
+          </div>
+          <div class="roadmap-cta-actions">
+            <a class="roadmap-action-btn is-primary" href="#trial">공개 알림 구독하기 <span aria-hidden="true">↓</span></a>
+            <a class="roadmap-action-btn" href="https://github.com/plcmanjp/digitaltwinmax/issues" target="_blank" rel="noopener noreferrer">원하는 설비 제안하기 <span aria-hidden="true">↗</span><span class="sr-only"> (새 탭)</span></a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -496,7 +637,7 @@
           </div>
         </div>
         <div class="faq-list">
-          <details open><summary>어떤 설비 모델을 불러올 수 있나요?</summary><p>제품판은 STEP 파일(.step, .stp)을 바로 불러옵니다. 체험판은 내장된 MINI MPS 교육 장비를 제공합니다.</p></details>
+          <details open><summary>어떤 설비 모델을 불러올 수 있나요?</summary><p>제품판은 STEP 파일(.step, .stp)을 바로 불러옵니다. 체험판은 현재 초급 MINI MPS 교육 장비를 내장 제공하며, 기초반(Starter Workbench)과 중급(챔버 로더/언로더 셀) 설비는 추후 순차 추가할 예정입니다.</p></details>
           <details><summary>어떤 PLC를 지원하나요?</summary><p>미쓰비시 Q 시리즈입니다. MX Component로 GX Simulator2 또는 실제 Q PLC에 연결하며, 이더넷은 MC 프로토콜로도 연결할 수 있습니다. 검증을 마친 연결 경로는 릴리스 노트에 표시합니다.</p></details>
           <details><summary>PLC가 없어도 먼저 확인할 수 있나요?</summary><p>네. 가상 실행과 신호 시뮬레이터로 설비의 움직임을 먼저 볼 수 있습니다.</p></details>
           <details><summary>AI 에이전트와 함께 쓸 수 있나요?</summary><p>MCP를 지원하는 외부 AI 에이전트가 설비 구성과 PLC 신호를 조회할 수 있습니다. 에이전트가 낸 편집안을 앱에서 사람이 승인해 적용하는 기능은 개발 중입니다.</p></details>
