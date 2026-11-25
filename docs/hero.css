@@ -35,17 +35,6 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
   flex-shrink: 0;
 }
-.brand-tag {
-  padding: 3px 7px;
-  border-radius: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-dark-muted);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-}
 .header-nav-group {
   display: flex;
   align-items: center;
@@ -143,23 +132,6 @@
 .hero-copy {
   min-width: 0;
 }
-.hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 6px 12px;
-  border-left: 2px solid var(--cyan);
-  background: rgba(56, 189, 248, 0.08);
-  color: #bae6fd;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-}
-.hero-eyebrow .sep {
-  color: rgba(186, 230, 253, 0.45);
-}
 .hero-section h1 {
   margin: 20px 0 20px;
   font-size: clamp(38px, 4.1vw, 60px);
@@ -219,31 +191,6 @@
   background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.32);
 }
-.hero-meta-strip {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 18px;
-  margin: 24px 0 0;
-  padding: 18px 0 0;
-  border-top: 1px solid var(--border-dark);
-  list-style: none;
-  color: var(--text-dark-muted);
-  font-size: 12.5px;
-  font-weight: 500;
-}
-.hero-meta-strip li {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-.hero-meta-strip li::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--emerald);
-  flex-shrink: 0;
-}
 
 /* Desktop Studio Window Frame for Inline Trailer */
 .hero-stage-wrap {
@@ -255,56 +202,6 @@
   border-top-color: rgba(255, 255, 255, 0.24);
   background: linear-gradient(180deg, #171c24 0%, #10141a 100%);
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-.app-window-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 4px 6px 12px;
-}
-.win-dots {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.win-dots span {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-}
-.win-title {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: #cbd5e1;
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-.win-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-  padding: 3px 9px;
-  border-radius: 999px;
-  border: 1px solid rgba(16, 185, 129, 0.35);
-  background: rgba(16, 185, 129, 0.12);
-  color: #6ee7b7;
-  font-size: 11px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--emerald);
-  box-shadow: 0 0 8px var(--emerald);
 }
 .hero-stage-wrap .promo-stage {
   border-radius: 10px;
@@ -355,9 +252,6 @@
     min-height: 44px;
     font-size: 17px;
   }
-  .brand-tag {
-    display: none;
-  }
   .header-cta {
     order: 2;
     min-height: 36px;
@@ -383,9 +277,6 @@
   .hero-section {
     padding: 28px 0 36px;
   }
-  .hero-eyebrow {
-    font-size: 10.5px;
-  }
   .hero-section h1 {
     font-size: clamp(32px, 8.6vw, 42px);
     margin: 14px 0 14px;
@@ -406,10 +297,31 @@
     padding: 10px;
     border-radius: 12px;
   }
-  .win-title {
-    display: none;
-  }
   .hero-video-caption {
     font-size: 12px;
   }
+}
+
+/* Restraint pass: the video stands on its own, without a fake window frame. */
+.hero-stage-wrap {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.hero-stage-wrap .promo-stage {
+  border: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.55);
+}
+.hero-video-caption {
+  padding: 0;
+}
+.hero-note {
+  margin-top: 22px;
+  color: var(--text-dark-muted);
+  font-size: 13.5px;
+  line-height: 1.7;
+  word-break: keep-all;
 }

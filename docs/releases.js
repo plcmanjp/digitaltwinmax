@@ -113,5 +113,41 @@
     return "";
   }
 
-  return Object.freeze({ RELEASES_URL, API_URL, selectTrial, loadTrial, extractSha256, ReleaseError });
+  // The landing shows only the opening paragraph of a release body. The first line is the
+  // title; reading stops at the first Markdown heading. Paragraphs that carry a file name or
+  // a hash belong to the download block and are skipped.
+  function extractSummary(notes, maxLength = 240) {
+    if (typeof notes !== "string" || !notes.trim()) return "";
+    const lines = notes.replace(/\r\n?/g, "\n").split("\n");
+    let index = 0;
+    while (index < lines.length && !lines[index].trim()) index++;
+    index++;
+    const paragraphs = [];
+    let current = [];
+    for (; index < lines.length; index++) {
+      const line = lines[index].trim();
+      if (/^#{1,6}\s/.test(line)) break;
+      if (!line) {
+        if (current.length) paragraphs.push(current.join(" "));
+        current = [];
+        continue;
+      }
+      current.push(line);
+    }
+    if (current.length) paragraphs.push(current.join(" "));
+    const chosen = paragraphs.find(text => !/\b[0-9a-fA-F]{64}\b/.test(text) && !/DigitalTwinMax-Trial-/.test(text));
+    if (!chosen) return "";
+    let text = chosen
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+      .replace(/[*_`]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (text.length > maxLength) {
+      const cut = text.lastIndexOf(". ", maxLength);
+      text = cut > 40 ? text.slice(0, cut + 1) : `${text.slice(0, maxLength).trimEnd()}...`;
+    }
+    return text;
+  }
+
+  return Object.freeze({ RELEASES_URL, API_URL, selectTrial, loadTrial, extractSha256, extractSummary, ReleaseError });
 });

@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { selectTrial, loadTrial, extractSha256, API_URL } = require('../docs/releases.js');
+const { selectTrial, loadTrial, extractSha256, extractSummary, API_URL } = require('../docs/releases.js');
 const { asset, release, response, cases } = require('./fixtures.cjs');
 
 test('no public release produces an empty state without a download URL', () => {
@@ -97,4 +97,27 @@ test('extractSha256 matches exact asset hashes and rejects ambiguous multi-asset
   assert.equal(extractSha256(`SHA-256: ${hashA}`, 'DigitalTwinMax-Trial-0.2.0-windows-x64.zip', 2), '');
   assert.equal(extractSha256(`SHA-256: ${hashA}\n${hashB}`, 'DigitalTwinMax-Trial-0.2.0-windows-x64.zip', 1), '');
   assert.equal(extractSha256('short: deadbeef', 'DigitalTwinMax-Trial-0.2.0-windows-x64.zip', 1), '');
+});
+test('extractSummary returns the opening paragraph and stops at the first heading', () => {
+  const notes = '제목 줄\n\n첫 문단입니다. 두 줄로\n이어집니다.\n\n## 내려받기\n파일: DigitalTwinMax-Trial-0.2.0-windows-x64.zip\n';
+  assert.equal(extractSummary(notes), '첫 문단입니다. 두 줄로 이어집니다.');
+});
+test('extractSummary skips download paragraphs that carry a file name or a hash', () => {
+  const hash = 'a'.repeat(64);
+  const notes = `제목\n\n파일: DigitalTwinMax-Trial-0.2.0-windows-x64.zip\nSHA-256: ${hash}\n\n설명 문단입니다.\n\n다음 문단입니다.`;
+  assert.equal(extractSummary(notes), '설명 문단입니다.');
+});
+test('extractSummary strips Markdown links and emphasis and trims at a sentence boundary', () => {
+  const long = '첫 문장입니다. '.repeat(40);
+  const notes = `제목\n\n**굵게** [링크](https://example.com) \`코드\` ${long}`;
+  const summary = extractSummary(notes, 120);
+  assert.ok(summary.startsWith('굵게 링크 코드 첫 문장입니다.'));
+  assert.ok(summary.length <= 121);
+  assert.ok(summary.endsWith('.'));
+});
+test('extractSummary returns empty text when there is nothing to summarize', () => {
+  assert.equal(extractSummary(''), '');
+  assert.equal(extractSummary('제목만'), '');
+  assert.equal(extractSummary('제목\n\n## 섹션\n내용'), '');
+  assert.equal(extractSummary(null), '');
 });

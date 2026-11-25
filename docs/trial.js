@@ -102,15 +102,11 @@
       }
       detail.append(list);
     }
-    const notes = make("details", "trial-notes");
-    if (result.assets.length) notes.open = true;
-    notes.append(make("summary", "", "릴리스 노트"));
-    const excerpt = result.notes.trim();
-    notes.append(make("p", "trial-notes-text", excerpt ? excerpt.slice(0, 1600) : "별도로 작성된 릴리스 노트가 없습니다. 공식 Release에서 설치 및 이용 안내를 확인하세요."));
-    if (excerpt.length > 1600) notes.append(make("p", "trial-note-limit", "노트의 앞부분만 표시합니다. 전체 내용은 공식 Release에서 확인하세요."));
-    detail.append(notes);
+    // Only the opening summary appears here; the full notes stay on the Release page.
+    const summary = typeof api.extractSummary === "function" ? api.extractSummary(result.notes) : "";
+    if (summary) detail.append(make("p", "trial-summary", summary));
     const link = make("a", "text-link trial-release-link");
-    setLinkLabel(link, "공식 Release와 전체 노트", "↗", " (새 탭)");
+    setLinkLabel(link, "설치 방법과 알려진 문제 (릴리스 노트)", "↗", " (새 탭)");
     link.href = result.url;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
@@ -149,7 +145,7 @@
         if (notify) notify.hidden = true;
         status.textContent = result.state === "available" ? "체험판 다운로드" : "배포 파일 준비 중";
         message.textContent = result.state === "available"
-          ? "릴리스 노트에서 지원 환경과 이용 조건을 확인하고, 사용 중인 Windows에 맞는 파일을 선택하세요."
+          ? "압축 파일 하나를 내려받아 풀면 바로 실행됩니다."
           : "체험판 소식은 공개되었지만 다운로드할 수 있는 Windows 배포 파일은 아직 없습니다. 공식 Release의 안내를 확인하세요.";
         if (result.state === "available") {
           if (heroLabel) heroLabel.textContent = `Windows 체험판 받기 (v${result.version})`;
@@ -157,7 +153,7 @@
           if (mobileDockLink) mobileDockLink.textContent = "체험판 받기";
           if (mobileDockCopy) mobileDockCopy.textContent = `무료 체험판 v${result.version}`;
           if (bottomLink) setLinkLabel(bottomLink, "체험판 받으러 이동", "↑");
-          if (bottomCopy) bottomCopy.textContent = "신청 없이 바로 다운로드할 수 있는 무료 체험판입니다. 사용 기한이 없습니다.";
+          if (bottomCopy) bottomCopy.textContent = "직접 짠 래더로 MINI MPS를 움직여 보세요.";
         }
         showRelease(result);
       }
