@@ -200,20 +200,20 @@ html.reveal-ready .reveal-item.is-revealed {
 .video-chapters {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 4px 18px;
   margin-top: 12px;
 }
 .video-chapters button {
   display: inline-flex;
   align-items: center;
-  min-height: 36px;
-  padding: 4px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #cbd5e1;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--text-dark-muted);
+  font-family: var(--font-sans);
+  font-size: 13px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
@@ -225,9 +225,10 @@ html.reveal-ready .reveal-item.is-revealed {
   background: rgba(255, 255, 255, 0.12);
 }
 .video-chapters button[aria-current="true"] {
-  background: var(--cyan);
+  background: none;
   border-color: var(--cyan);
-  color: #06131f;
+  color: var(--text-dark);
+  box-shadow: inset 0 -2px 0 var(--cyan);
 }
 
 .promo-stage, .feed-stage {
@@ -463,22 +464,25 @@ html.reveal-ready .reveal-item.is-revealed {
 .value-strip {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  gap: clamp(24px, 4vw, 56px);
   margin: 0 0 40px;
   padding: 0;
   list-style: none;
+  margin-bottom: 56px;
 }
 .value-strip li {
-  padding: 24px;
-  border: 1px solid var(--border-light);
+  padding: 0;
+  border: 0;
   border-radius: 14px;
-  background: var(--bg-light-card);
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+  background: none;
+  box-shadow: none;
   transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 .value-strip li:hover {
-  border-color: var(--border-light-strong);
-  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+  box-shadow: none;
+  padding: 0;
+  border: 0;
+  background: none;
 }
 .value-strip h3 {
   margin: 14px 0 8px;
@@ -486,6 +490,7 @@ html.reveal-ready .reveal-item.is-revealed {
   font-weight: 700;
   letter-spacing: -0.03em;
   color: var(--text-light);
+  margin-bottom: 8px;
 }
 .value-strip p {
   color: var(--text-light-muted);
@@ -496,10 +501,10 @@ html.reveal-ready .reveal-item.is-revealed {
 /* Interactive 3-step showcase */
 .step-showcase {
   padding: clamp(20px, 3vw, 32px);
-  border: 1px solid var(--border-light);
+  border: 0;
   border-radius: 18px;
   background: var(--bg-light-card);
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+  box-shadow: none;
 }
 .step-showcase:not(.is-tabbed) .step-tabs {
   display: none;
@@ -507,8 +512,9 @@ html.reveal-ready .reveal-item.is-revealed {
 .step-tabs {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 0;
   margin-bottom: 32px;
+  border-bottom: 1px solid var(--border-light);
 }
 .step-tab {
   display: flex;
@@ -516,23 +522,26 @@ html.reveal-ready .reveal-item.is-revealed {
   gap: 12px;
   min-height: 54px;
   padding: 12px 16px;
-  border: 1px solid var(--border-light);
-  border-radius: 10px;
-  background: var(--bg-light);
+  border: 0;
+  border-radius: 0;
+  background: none;
   color: var(--text-light-muted);
   font-size: 14px;
   font-weight: 600;
   text-align: left;
   transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
 }
 .step-tab:hover, .step-tab:focus-visible {
   border-color: var(--text-light);
   color: var(--text-light);
 }
 .step-tab[aria-selected="true"] {
-  background: var(--text-light);
+  background: none;
   border-color: var(--text-light);
-  color: #ffffff;
+  color: var(--text-light);
+  border-bottom-color: var(--text-light);
 }
 .step-tab-num {
   flex: 0 0 auto;
@@ -544,7 +553,8 @@ html.reveal-ready .reveal-item.is-revealed {
   color: var(--accent);
 }
 .step-tab[aria-selected="true"] .step-tab-num {
-  color: var(--cyan);
+  color: var(--accent);
+  background: none;
 }
 .step-tab-title {
   min-width: 0;
@@ -591,16 +601,18 @@ html.reveal-ready .reveal-item.is-revealed {
 .step-video-jump {
   display: inline-flex;
   align-items: center;
-  min-height: 40px;
+  min-height: 0;
   margin-top: 22px;
-  padding: 6px 16px;
-  border: 1px solid var(--accent-line);
-  border-radius: 999px;
-  background: var(--accent-soft);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
   color: var(--accent);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 .step-video-jump:hover {
   background: var(--accent);
@@ -633,9 +645,9 @@ html.reveal-ready .reveal-item.is-revealed {
 .zoom-frame img {
   width: 100%;
   height: auto;
-  border: 1px solid var(--border-light);
+  border: 0;
   border-radius: 12px;
-  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.14);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
   transform: scale(1);
   transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
@@ -670,6 +682,7 @@ html.reveal-ready .reveal-item.is-revealed {
   .media-section .zoom-frame:hover img, .media-section .zoom-frame:focus-visible img {
     box-shadow: 0 24px 58px rgba(0, 0, 0, 0.65);
   }
+
 }
 
 .lightbox {
@@ -767,10 +780,10 @@ html.reveal-ready .reveal-item.is-revealed {
   margin: 40px 0 0;
   padding: clamp(16px, 2.6vw, 24px);
   border-radius: 18px;
-  border: 1px solid rgba(15, 23, 42, 0.16);
+  border: 0;
   background: #10141b;
   color: var(--text-dark);
-  box-shadow: 0 24px 56px rgba(15, 23, 42, 0.16);
+  box-shadow: none;
 }
 .usage-header {
   display: flex;
@@ -816,15 +829,16 @@ html.reveal-ready .reveal-item.is-revealed {
   flex-direction: column;
   padding: 26px;
   border-radius: 16px;
-  border: 1px solid var(--border-dark);
-  border-top-color: var(--border-dark-top);
-  background: linear-gradient(180deg, #161b23 0%, #11151b 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  border: 0;
+  background: var(--bg-dark-card);
+  box-shadow: none;
   min-width: 0;
   transition: border-color 0.18s ease, transform 0.18s ease;
 }
 .bento-card:hover {
-  border-color: rgba(56, 189, 248, 0.35);
+  border: 0;
+  background: var(--bg-dark-card);
+  box-shadow: none;
 }
 .bento-io {
   grid-column: span 8;
@@ -855,7 +869,7 @@ html.reveal-ready .reveal-item.is-revealed {
   margin-top: 22px;
   padding: 18px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 0;
   background: #0b0e13;
 }
 .io-node {
@@ -1142,8 +1156,7 @@ html.reveal-ready .reveal-item.is-revealed {
   gap: 16px;
   padding: 16px;
   border-radius: 16px;
-  border: 1px solid var(--border-dark);
-  border-top-color: var(--border-dark-top);
+  border: 0;
   background: var(--bg-dark-card);
   min-width: 0;
 }
@@ -1246,24 +1259,26 @@ html.reveal-ready .reveal-item.is-revealed {
   flex-direction: column;
   padding: 22px;
   border-radius: 16px;
-  border: 1px solid var(--border-dark);
-  border-top-color: var(--border-dark-top);
-  background: linear-gradient(180deg, #161b23 0%, #11151b 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border: 0;
+  background: var(--bg-dark-card);
+  box-shadow: none;
   min-width: 0;
   transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 .roadmap-card:hover {
-  border-color: rgba(56, 189, 248, 0.34);
+  border: 0;
+  background: var(--bg-dark-card);
+  box-shadow: none;
 }
 .roadmap-card.is-current {
-  border-color: rgba(16, 185, 129, 0.42);
-  border-top-color: rgba(110, 231, 183, 0.65);
-  background: linear-gradient(180deg, #152126 0%, #10161c 100%);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(110, 231, 183, 0.14);
+  background: var(--bg-dark-card);
+  box-shadow: none;
+  border: 0;
 }
 .roadmap-card.is-current:hover {
-  border-color: rgba(16, 185, 129, 0.68);
+  border: 0;
+  background: var(--bg-dark-card);
+  box-shadow: none;
 }
 .roadmap-card-head {
   display: flex;
@@ -1281,16 +1296,17 @@ html.reveal-ready .reveal-item.is-revealed {
   font-size: 11.5px;
   font-weight: 700;
   line-height: 1.2;
+  border: 0;
 }
 .roadmap-status.is-current {
-  border: 1px solid rgba(16, 185, 129, 0.45);
-  background: rgba(16, 185, 129, 0.16);
-  color: #6ee7b7;
+  border: 0;
+  background: var(--emerald);
+  color: #04130d;
 }
 .roadmap-status.is-upcoming {
-  border: 1px solid rgba(251, 191, 36, 0.36);
-  background: rgba(251, 191, 36, 0.11);
-  color: #fde68a;
+  border: 0;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-dark);
 }
 .roadmap-hero {
   margin: 0;
@@ -1333,11 +1349,12 @@ html.reveal-ready .reveal-item.is-revealed {
   display: inline-flex;
   align-items: center;
   min-height: 36px;
-  color: #7dd3fc;
+  color: var(--cyan);
   font-size: 13px;
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 4px;
+  margin-top: 16px;
 }
 .roadmap-card-link:hover {
   color: #ffffff;
@@ -1351,9 +1368,8 @@ html.reveal-ready .reveal-item.is-revealed {
   margin-top: 28px;
   padding: 24px 28px;
   border-radius: 16px;
-  border: 1px solid var(--border-dark);
-  border-top-color: var(--border-dark-top);
-  background: linear-gradient(180deg, #141922 0%, #10141b 100%);
+  border: 0;
+  background: var(--bg-dark-surface);
 }
 .roadmap-cta-copy {
   max-width: 68ch;
@@ -1413,6 +1429,7 @@ html.reveal-ready .reveal-item.is-revealed {
   .roadmap-section .zoom-frame:focus-visible img {
     box-shadow: 0 20px 44px rgba(0, 0, 0, 0.6);
   }
+
 }
 
 /* =========================================================
@@ -1496,11 +1513,11 @@ html.reveal-ready .reveal-item.is-revealed {
 
 /* Official Release Hub Card */
 .trial-panel {
-  border: 1px solid var(--border-light);
+  border: 0;
   border-radius: 16px;
   padding: clamp(22px, 3vw, 32px);
   background: var(--bg-light-card);
-  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
   min-width: 0;
 }
 #trial-status {
@@ -1641,7 +1658,7 @@ html.reveal-ready .reveal-item.is-revealed {
   color: var(--text-light);
 }
 .trial-badge {
-  border: 1px solid var(--accent-line);
+  border: 0;
   border-radius: 999px;
   background: var(--accent-soft);
   color: var(--accent);
@@ -1684,7 +1701,7 @@ html.reveal-ready .reveal-item.is-revealed {
   padding: 2px 8px;
   border-radius: 999px;
   background: var(--accent-soft);
-  border: 1px solid var(--accent-line);
+  border: 0;
   color: var(--accent);
   font-size: 11px;
   font-weight: 700;
@@ -1741,7 +1758,8 @@ html.reveal-ready .reveal-item.is-revealed {
   color: var(--accent);
   font-weight: 700;
   font-size: 13px;
-  margin-top: 6px;
+  margin-top: 12px;
+  display: inline-flex;
 }
 
 /* 3-column guide cards */
@@ -1752,10 +1770,10 @@ html.reveal-ready .reveal-item.is-revealed {
   min-width: 0;
 }
 .trial-guide section {
-  padding: 24px;
-  border: 1px solid var(--border-light);
+  padding: 0;
+  border: 0;
   border-radius: 14px;
-  background: var(--bg-light-card);
+  background: none;
   min-width: 0;
 }
 .trial-guide h3 {
@@ -1818,10 +1836,10 @@ html.reveal-ready .reveal-item.is-revealed {
 
 /* Edition comparison table */
 .edition-compare {
-  padding: 28px;
-  border: 1px solid var(--border-light);
+  padding: 0;
+  border: 0;
   border-radius: 16px;
-  background: var(--bg-light-card);
+  background: none;
   min-width: 0;
 }
 .edition-compare h3 {
@@ -1875,17 +1893,11 @@ html.reveal-ready .reveal-item.is-revealed {
   font-size: 11.5px;
   font-weight: 700;
 }
-.table-pill.is-trial {
-  background: #dcfce7;
-  color: #166534;
-}
-.table-pill.is-pro {
+.table-pill.is-trial,
+.table-pill.is-pro,
+.table-pill.is-included {
   background: var(--accent-soft);
   color: var(--accent);
-}
-.table-pill.is-included {
-  background: #e0f2fe;
-  color: #0369a1;
 }
 .table-pill.is-muted {
   background: var(--bg-light-subtle);
@@ -1901,10 +1913,12 @@ html.reveal-ready .reveal-item.is-revealed {
   margin-bottom: 28px;
 }
 .faq-list {
-  border-radius: 16px;
-  border: 1px solid var(--border-light);
-  background: var(--bg-light-card);
-  padding: 0 24px;
+  border-radius: 0;
+  border: 0;
+  background: none;
+  padding: 0;
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
 }
 .faq-list details {
   border-top: 1px solid var(--border-light);
@@ -1934,20 +1948,25 @@ html.reveal-ready .reveal-item.is-revealed {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--border-light-strong);
-  border-radius: 50%;
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
   color: var(--text-light-muted);
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 400;
   line-height: 1;
+  background: none;
 }
 .faq-list details[open] summary::after {
   content: "-";
-  background: var(--text-light);
-  border-color: var(--text-light);
-  color: #ffffff;
+  background: none;
+  color: var(--text-light-muted);
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  font-size: 20px;
 }
 .faq-list a {
   color: var(--accent);
@@ -2091,6 +2110,7 @@ html.reveal-ready .reveal-item.is-revealed {
   .footer-bottom p:nth-child(2) {
     margin-right: 0;
   }
+
 }
 
 @media (max-width: 959px) {
@@ -2101,6 +2121,7 @@ html.reveal-ready .reveal-item.is-revealed {
   .feed-next {
     display: inline-flex;
   }
+
 }
 
 @media (max-width: 700px) {
@@ -2146,7 +2167,7 @@ html.reveal-ready .reveal-item.is-revealed {
   }
   .step-tabs {
     grid-template-columns: minmax(0, 1fr);
-    gap: 8px;
+    gap: 0;
     margin-bottom: 24px;
   }
   .step-tab {
@@ -2176,7 +2197,7 @@ html.reveal-ready .reveal-item.is-revealed {
     align-items: flex-start;
   }
   .edition-compare {
-    padding: 20px 16px;
+    padding: 0;
   }
   .compare-table, .compare-table tbody, .compare-table tr, .compare-table th, .compare-table td {
     display: block;
@@ -2232,7 +2253,7 @@ html.reveal-ready .reveal-item.is-revealed {
     padding-bottom: 48px;
   }
   .faq-list {
-    padding: 0 18px;
+    padding: 0;
   }
   .faq-list summary {
     font-size: 15px;
@@ -2304,6 +2325,7 @@ html.reveal-ready .reveal-item.is-revealed {
     font-weight: 700;
     white-space: nowrap;
   }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2318,152 +2340,17 @@ html.reveal-ready .reveal-item.is-revealed {
   .zoom-frame:hover img, .zoom-frame:focus-visible img {
     transform: none;
   }
+
 }
 
-/* =========================================================
-   Restraint pass
-   - Separate areas with spacing and surface color, not outline boxes.
-   - Borders remain only on tables, list dividers and buttons.
-   - Status badges are filled, in two kinds: included and upcoming.
-   - One accent color; monospace only for addresses and versions.
-   ========================================================= */
-.value-strip {
-  gap: clamp(24px, 4vw, 56px);
-  margin-bottom: 56px;
-}
-.value-strip li,
-.value-strip li:hover {
-  padding: 0;
-  border: 0;
-  background: none;
-  box-shadow: none;
-}
-.value-strip h3 {
-  margin-bottom: 8px;
-}
 
-.step-showcase {
-  border: 0;
-  box-shadow: none;
-}
-.step-tabs {
-  gap: 0;
-  border-bottom: 1px solid var(--border-light);
-}
-.step-tab {
-  border: 0;
-  border-bottom: 2px solid transparent;
-  border-radius: 0;
+.video-chapters button:hover {
   background: none;
-  margin-bottom: -1px;
+  color: var(--text-dark);
 }
-.step-tab[aria-selected="true"] {
-  background: none;
-  color: var(--text-light);
-  border-bottom-color: var(--text-light);
-}
-.step-tab[aria-selected="true"] .step-tab-num {
-  background: none;
-  color: var(--accent);
-}
-.step-video-jump {
-  min-height: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: none;
-  color: var(--accent);
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-.zoom-frame img {
-  border: 0;
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
-}
-
-.usage-overview {
-  border: 0;
-  box-shadow: none;
-}
-.video-chapters {
-  gap: 4px 18px;
-}
-.video-chapters button {
-  min-height: 32px;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: none;
-  color: var(--text-dark-muted);
-  font-family: var(--font-sans);
-  font-size: 13px;
-}
-.video-chapters button:hover,
 .video-chapters button:focus-visible {
   background: none;
   color: var(--text-dark);
-}
-.video-chapters button[aria-current="true"] {
-  background: none;
-  color: var(--text-dark);
-  box-shadow: inset 0 -2px 0 var(--cyan);
-}
-
-.bento-card,
-.bento-card:hover {
-  border: 0;
-  background: var(--bg-dark-card);
-  box-shadow: none;
-}
-.io-terminal {
-  border: 0;
-}
-
-.feed-item {
-  border: 0;
-}
-
-.roadmap-card,
-.roadmap-card:hover,
-.roadmap-card.is-current,
-.roadmap-card.is-current:hover {
-  border: 0;
-  background: var(--bg-dark-card);
-  box-shadow: none;
-}
-.roadmap-status {
-  border: 0;
-}
-.roadmap-status.is-current {
-  border: 0;
-  background: var(--emerald);
-  color: #04130d;
-}
-.roadmap-status.is-upcoming {
-  border: 0;
-  background: rgba(255, 255, 255, 0.12);
-  color: var(--text-dark);
-}
-.roadmap-card-link {
-  margin-top: 16px;
-  color: var(--cyan);
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-.roadmap-cta-bar {
-  border: 0;
-  background: var(--bg-dark-surface);
-}
-
-.trial-panel {
-  border: 0;
-  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
-}
-.trial-badge,
-.trial-arch-hint {
-  border: 0;
 }
 .trial-summary {
   margin-top: 20px;
@@ -2471,36 +2358,4 @@ html.reveal-ready .reveal-item.is-revealed {
   font-size: 14px;
   line-height: 1.75;
   word-break: keep-all;
-}
-.trial-release-link {
-  display: inline-flex;
-  margin-top: 12px;
-}
-.trial-guide section {
-  padding: 0;
-  border: 0;
-  background: none;
-}
-.edition-compare {
-  padding: 0;
-  border: 0;
-  background: none;
-}
-.faq-list {
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: none;
-  border-top: 1px solid var(--border-light);
-  border-bottom: 1px solid var(--border-light);
-}
-.faq-list summary::after,
-.faq-list details[open] summary::after {
-  width: auto;
-  height: auto;
-  border: 0;
-  border-radius: 0;
-  background: none;
-  color: var(--text-light-muted);
-  font-size: 20px;
 }

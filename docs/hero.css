@@ -196,16 +196,17 @@
 .hero-stage-wrap {
   min-width: 0;
   margin: 0;
-  padding: 12px;
+  padding: 0;
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-top-color: rgba(255, 255, 255, 0.24);
-  background: linear-gradient(180deg, #171c24 0%, #10141a 100%);
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border: 0;
+  background: none;
+  box-shadow: none;
 }
 .hero-stage-wrap .promo-stage {
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  border: 0;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.55);
 }
 .hero-stage-wrap .video-chapters {
   margin-top: 12px;
@@ -218,7 +219,7 @@
 }
 .hero-video-caption {
   margin-top: 10px;
-  padding: 0 4px 2px;
+  padding: 0;
   color: var(--text-dark-muted);
   font-size: 12.5px;
   line-height: 1.6;
@@ -233,6 +234,7 @@
   .hero-section h1 {
     font-size: clamp(36px, 6vw, 52px);
   }
+
 }
 @media (max-width: 700px) {
   .site-header {
@@ -294,30 +296,16 @@
     justify-content: center;
   }
   .hero-stage-wrap {
-    padding: 10px;
+    padding: 0;
     border-radius: 12px;
   }
   .hero-video-caption {
     font-size: 12px;
   }
+
 }
 
-/* Restraint pass: the video stands on its own, without a fake window frame. */
-.hero-stage-wrap {
-  padding: 0;
-  border: 0;
-  background: none;
-  box-shadow: none;
-}
-.hero-stage-wrap .promo-stage {
-  border: 0;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.55);
-}
-.hero-video-caption {
-  padding: 0;
-}
+
 .hero-note {
   margin-top: 22px;
   color: var(--text-dark-muted);
