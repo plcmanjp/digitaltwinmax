@@ -4,7 +4,7 @@
 
 장비를 조립하기 전에 3D 설비 모델로 PLC 제어 프로그램을 시운전하는 Windows 데스크톱 앱입니다.
 
-[공식 소개 페이지](https://plcmanjp.github.io/digitaltwinmax/) | [무료 체험판 다운로드 (Releases)](https://github.com/plcmanjp/digitaltwinmax/releases) | [체험판 설문](https://docs.google.com/forms/d/e/1FAIpQLSc0Yhx-0pLgTDBpMvXx29FrXEcGQxNz2F5vwyN28JjxgcMViw/viewform) | [의견 및 버그 제보](https://github.com/plcmanjp/digitaltwinmax/issues) | [도입 문의](mailto:digitaltwinmax@googlegroups.com)
+[공식 소개 페이지](https://plcmanjp.github.io/digitaltwinmax/) | [무료 버전 다운로드 (Releases)](https://github.com/plcmanjp/digitaltwinmax/releases) | [무료 버전 설문](https://docs.google.com/forms/d/e/1FAIpQLSc0Yhx-0pLgTDBpMvXx29FrXEcGQxNz2F5vwyN28JjxgcMViw/viewform) | [의견 및 버그 제보](https://github.com/plcmanjp/digitaltwinmax/issues) | [도입 문의](mailto:digitaltwinmax@googlegroups.com)
 
 ![디지털트윈맥스 3D 설비 시운전 화면](docs/assets/promo-main.jpg)
 
@@ -22,7 +22,7 @@
 
 형상은 CAD에서, 동작과 PLC 신호는 앱에서 설정해 바로 시운전합니다.
 
-1. **STEP 01. 설비 모델과 부품 트리**: 제품판에서는 설계한 STEP 파일(`.step`, `.stp`)을 바로 열고, 무료 체험판에서는 내장된 MINI MPS 교육 장비(358부품)의 부품 계층 트리와 3D 뷰포트를 확인합니다.
+1. **STEP 01. 설비 모델과 부품 트리**: 제품판에서는 설계한 STEP 파일(`.step`, `.stp`)을 바로 열고, 무료 버전에서는 내장된 MINI MPS 교육 장비(358부품)의 부품 계층 트리와 3D 뷰포트를 확인합니다.
 2. **STEP 02. 구동부와 I/O 주소 매핑**: 선택한 부품에 실린더나 센서 컴포넌트를 추가하고, 스크립트 작성 없이 전진 거리(mm)와 밸브/센서 PLC 주소를 속성 패널에 입력합니다.
 3. **STEP 03. 가상 실행과 PLC 연동**: PLC 없이 내장 신호 시뮬레이터로 동작을 먼저 점검하고, MX Component 또는 이더넷 MC 프로토콜로 제어 프로그램과 연결해 시운전합니다.
 
@@ -41,30 +41,30 @@
 
 - **내장 신호 시뮬레이터**: PLC나 시뮬레이터를 연결하기 전에도 앱 내부에서 출력 비트를 직접 제어하며 기구 방향과 센서 위치를 먼저 검증합니다.
 - **미쓰비시 Q 시리즈 연동**: MX Component 논리 국번으로 같은 PC의 GX Simulator2 또는 실제 Q 시리즈 PLC에 연결하며, 이더넷 환경에서는 MC 프로토콜(SLMP)을 지원합니다.
-- **STEP 임포트와 프로젝트 저장**: 제품판은 STEP 파일을 직접 불러오며, 체험판과 제품판 모두 설정한 프로젝트를 저장해 다음 검토에 다시 열 수 있습니다.
-- **AI 에이전트 연동 (MCP)**: MCP를 지원하는 외부 AI 에이전트가 설비 구성과 PLC 신호 할당 상태를 조회할 수 있습니다. 편집안 제안과 앱 내 사람 승인 기능은 개발 중이며 현재 체험판에는 포함되지 않습니다.
+- **STEP 임포트와 프로젝트 저장**: 제품판은 STEP 파일을 직접 불러오며, 무료 버전과 제품판 모두 설정한 프로젝트를 저장해 다음 검토에 다시 열 수 있습니다.
+- **AI 에이전트 연동 (MCP)**: MCP를 지원하는 외부 AI 에이전트가 설비 구성과 PLC 신호 할당 상태를 조회할 수 있습니다. 편집안 제안과 앱 내 사람 승인 기능은 개발 중이며 현재 무료 버전에는 포함되지 않습니다.
 
 ---
 
 ## 단계별 학습 설비 로드맵
 
-현재 무료 체험판에는 초급 **MINI MPS 교육 장비**가 기본 내장되어 있으며, 인터랙티브 기초반과 다축 중급 설비를 순차적으로 확장하고 있습니다. 기초반과 중급 설비는 현재 체험판에 포함되지 않은 추가 예정 항목이며, 공개 시기와 최종 구성은 개발 진행에 따라 조정될 수 있습니다.
+현재 무료 버전에는 초급 **MINI MPS 교육 장비**가 기본 내장되어 있으며, 인터랙티브 기초반과 다축 중급 설비를 순차적으로 확장하고 있습니다. 기초반과 중급 설비는 현재 무료 버전에 포함되지 않은 추가 예정 항목이며, 공개 시기와 최종 구성은 개발 진행에 따라 조정될 수 있습니다.
 
 | 단계 | 설비 | 주요 구성 및 학습 범위 | 현재 상태 |
 |---|---|---|---|
-| **01 기초반** | **Starter Workbench** | 단축 푸셔, 미니 컨베이어, 광전 센서, 시작/정지 스위치. 3D 화면 조작과 컴포넌트 부착을 단계별 인터랙티브 안내로 익히는 입문용 설비 | **추가 예정** (현재 체험판 미포함, 설비 3D 모델 앱 구동 시험 완료) |
-| **02 초급** | **MINI MPS 교육 장비** | 358부품, 공급 매거진, 이송 컨베이어, 진공 흡착 이송, 색상과 재질 분류. 내장 가상 실행과 미쓰비시 Q PLC 래더 연동 시운전 | **현재 체험판 포함** |
-| **03 중급** | **챔버 로더/언로더 셀** | 듀얼 갠트리 이송축, 2연속 공정 챔버, 버퍼 스테이지, 트레이/지그 이송. 실무형 다축 공정 시퀀스와 인터록 검증 | **추가 예정** (현재 체험판 미포함, 다축 설비 3D 모델 설계 완료) |
+| **01 기초반** | **Starter Workbench** | 단축 푸셔, 미니 컨베이어, 광전 센서, 시작/정지 스위치. 3D 화면 조작과 컴포넌트 부착을 단계별 인터랙티브 안내로 익히는 입문용 설비 | **추가 예정** (현재 무료 버전 미포함, 설비 3D 모델 앱 구동 시험 완료) |
+| **02 초급** | **MINI MPS 교육 장비** | 358부품, 공급 매거진, 이송 컨베이어, 진공 흡착 이송, 색상과 재질 분류. 내장 가상 실행과 미쓰비시 Q PLC 래더 연동 시운전 | **현재 무료 버전 포함** |
+| **03 중급** | **챔버 로더/언로더 셀** | 듀얼 갠트리 이송축, 2연속 공정 챔버, 버퍼 스테이지, 트레이/지그 이송. 실무형 다축 공정 시퀀스와 인터록 검증 | **추가 예정** (현재 무료 버전 미포함, 다축 설비 3D 모델 설계 완료) |
 
 - 새 학습 설비 공개 소식은 하단의 **알림 구독** 채널로 받아보실 수 있으며, 연습해 보고 싶은 자동화 설비 아이디어는 [공개 GitHub Issues](https://github.com/plcmanjp/digitaltwinmax/issues)에 남겨 주세요.
 
 ---
 
-## 무료 체험판 안내
+## 무료 버전 안내
 
-신청 절차 없이 [GitHub Releases](https://github.com/plcmanjp/digitaltwinmax/releases) 또는 [공식 소개 페이지](https://plcmanjp.github.io/digitaltwinmax/#trial)에서 바로 내려받을 수 있는 무료 체험판입니다. 사용 기한이 없습니다.
+신청 절차 없이 [GitHub Releases](https://github.com/plcmanjp/digitaltwinmax/releases) 또는 [공식 소개 페이지](https://plcmanjp.github.io/digitaltwinmax/#trial)에서 바로 내려받을 수 있는 무료 버전입니다. 사용 기한이 없습니다.
 
-### 체험판 시작 3단계
+### 무료 버전 시작 3단계
 
 1. **PLC 없이 가상 실행**: 앱을 열고 I/O 주소가 미리 할당된 MINI MPS 장비를 내장 신호 시뮬레이터로 먼저 움직여 봅니다.
 2. **I/O 주소표 확인과 저장**: 센서와 구동부에 연결된 PLC 주소를 매핑 창에서 확인하고, 설정을 바꿔 저장하거나 다시 열 수 있습니다.
@@ -72,9 +72,9 @@
 
 ---
 
-## 무료 체험판과 제품판 비교
+## 무료 버전과 제품판 비교
 
-| 구분 | 무료 체험판 | 제품판 |
+| 구분 | 무료 버전 | 제품판 |
 |---|---|---|
 | **설비 3D 모델** | 내장 MINI MPS 교육 장비 제공 | 설계한 STEP 파일(`.step`, `.stp`) 직접 불러오기 |
 | **가상 실행과 수동 시험** | 포함 (PLC 없이 신호 시뮬레이터 구동) | 포함 |
@@ -90,12 +90,12 @@
 ### 지원 환경
 
 - **운영체제**: Windows 10 또는 Windows 11 (64비트, x64) PC. 가상 실행과 기본 조작은 추가 프로그램 없이 바로 실행할 수 있습니다.
-- **PLC 연동 시**: GX Works2와 MX Component가 설치된 환경(MX Component는 체험판에 포함되지 않음), 또는 이더넷 MC 프로토콜 연결 환경.
+- **PLC 연동 시**: GX Works2와 MX Component가 설치된 환경(MX Component는 무료 버전에 포함되지 않음), 또는 이더넷 MC 프로토콜 연결 환경.
 - **지원 PLC**: 미쓰비시 Q 시리즈 (GX Simulator2 또는 실제 Q PLC 연결, GX Works3 기반 FX5 및 iQ-R 시리즈는 지원하지 않음).
 
 ### 안전 및 파일 무결성 확인
 
-- **Windows 보호 창(SmartScreen)**: 초기 체험판에는 코드 서명이 적용되어 있지 않아 실행 시 Windows 보호 창이 표시될 수 있습니다. 릴리스 노트의 SHA-256 해시와 내려받은 파일의 해시가 일치하는지 먼저 확인한 뒤 **추가 정보**에서 실행하세요.
+- **Windows 보호 창(SmartScreen)**: 초기 무료 버전에는 코드 서명이 적용되어 있지 않아 실행 시 Windows 보호 창이 표시될 수 있습니다. 릴리스 노트의 SHA-256 해시와 내려받은 파일의 해시가 일치하는지 먼저 확인한 뒤 **추가 정보**에서 실행하세요.
 - **PowerShell SHA-256 해시 확인**:
   ```powershell
   Get-FileHash .\DigitalTwinMax-Trial-*-windows-x64.zip -Algorithm SHA256
@@ -106,8 +106,8 @@
 
 ## 의견 제보, 알림 구독 및 권리 고지
 
-- **체험 후 설문**: 앱 종료 시 선택형 설문 참여 여부를 묻습니다. 실행에 막혔거나 의견을 남기시려면 [체험판 설문(Google Forms)](https://docs.google.com/forms/d/e/1FAIpQLSc0Yhx-0pLgTDBpMvXx29FrXEcGQxNz2F5vwyN28JjxgcMViw/viewform)에 로그인 없이 응답하실 수 있습니다. 설문 응답은 수집일로부터 90일 이후 순차 삭제되며, 앱은 설문 응답이나 프로젝트 파일, 사용 기록을 자동으로 전송하지 않습니다.
+- **체험 후 설문**: 앱 종료 시 선택형 설문 참여 여부를 묻습니다. 실행에 막혔거나 의견을 남기시려면 [무료 버전 설문(Google Forms)](https://docs.google.com/forms/d/e/1FAIpQLSc0Yhx-0pLgTDBpMvXx29FrXEcGQxNz2F5vwyN28JjxgcMViw/viewform)에 로그인 없이 응답하실 수 있습니다. 설문 응답은 수집일로부터 90일 이후 순차 삭제되며, 앱은 설문 응답이나 프로젝트 파일, 사용 기록을 자동으로 전송하지 않습니다.
 - **버그 및 기능 제안**: [공개 GitHub Issues](https://github.com/plcmanjp/digitaltwinmax/issues)에 남겨 주세요. 공개 게시판이므로 개인정보, 연락처, 고객 도면, PLC 네트워크 주소 등 민감정보는 올리지 마세요.
 - **비공개 및 도입 문의**: [digitaltwinmax@googlegroups.com](mailto:digitaltwinmax@googlegroups.com)
-- **새 체험판 알림 구독**: 이 저장소 상단의 `Watch -> Custom -> Releases`를 선택하거나, [Google 소식 그룹](https://groups.google.com/g/digitaltwinmax-tester) 가입 또는 [구독 메일 보내기](mailto:digitaltwinmax-tester+subscribe@googlegroups.com?subject=subscribe)를 이용해 주세요.
-- **권리 및 상표 고지**: 본 저장소는 공개 제품 소개 페이지와 체험판 릴리스 배포를 위한 공간이며, 오픈소스 라이선스를 부여하지 않습니다. `Mitsubishi`, `GX Works`, `MELSEC` 명칭은 호환성 설명 목적으로만 표기하며 제조사의 공식 인증이나 제휴를 의미하지 않습니다.
+- **새 무료 버전 알림 구독**: 이 저장소 상단의 `Watch -> Custom -> Releases`를 선택하거나, [Google 소식 그룹](https://groups.google.com/g/digitaltwinmax-tester) 가입 또는 [구독 메일 보내기](mailto:digitaltwinmax-tester+subscribe@googlegroups.com?subject=subscribe)를 이용해 주세요.
+- **권리 및 상표 고지**: 본 저장소는 공개 제품 소개 페이지와 무료 버전 릴리스 배포를 위한 공간이며, 오픈소스 라이선스를 부여하지 않습니다. `Mitsubishi`, `GX Works`, `MELSEC` 명칭은 호환성 설명 목적으로만 표기하며 제조사의 공식 인증이나 제휴를 의미하지 않습니다.

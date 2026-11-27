@@ -49,7 +49,7 @@
   function showRelease(result) {
     const meta = make("div", "trial-meta");
     meta.append(make("span", "trial-version", `v${result.version}`));
-    meta.append(make("span", "trial-badge", result.prerelease ? "사전 공개 체험판" : "공개 체험판"));
+    meta.append(make("span", "trial-badge", result.prerelease ? "사전 공개 무료 버전" : "공개 무료 버전"));
     const date = make("time", "trial-date", new Date(result.publishedAt).toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul" }));
     date.dateTime = result.publishedAt;
     meta.append(date);
@@ -124,35 +124,35 @@
     detail.hidden = true;
     currentHashCommand = "Get-FileHash .\\DigitalTwinMax-Trial-*.zip -Algorithm SHA256";
     if (lead) lead.textContent = leadText;
-    if (heroLabel) heroLabel.textContent = "Windows 체험판 안내";
-    if (headerLink) headerLink.textContent = "체험판 안내";
-    if (mobileDockLink) mobileDockLink.textContent = "체험판 안내";
+    if (heroLabel) heroLabel.textContent = "Windows 무료 버전 안내";
+    if (headerLink) headerLink.textContent = "무료 버전 안내";
+    if (mobileDockLink) mobileDockLink.textContent = "무료 버전 안내";
     if (mobileDockCopy) mobileDockCopy.textContent = mobileDockCopyText;
-    if (bottomLink) setLinkLabel(bottomLink, "체험판 안내로 이동", "↑");
+    if (bottomLink) setLinkLabel(bottomLink, "무료 버전 안내로 이동", "↑");
     if (bottomCopy) bottomCopy.textContent = bottomCopyText;
     status.textContent = "공개 상태 확인 중";
-    message.textContent = "GitHub Releases에서 체험판 정보를 확인하고 있습니다.";
+    message.textContent = "GitHub Releases에서 무료 버전 정보를 확인하고 있습니다.";
     try {
       const result = await api.loadTrial();
       if (result.state === "empty") {
-        status.textContent = "체험판 준비 중";
-        message.textContent = "아직 공개된 체험판이 없습니다. 준비가 되면 이곳에서 다운로드 파일과 이용 안내를 확인할 수 있습니다.";
+        status.textContent = "무료 버전 준비 중";
+        message.textContent = "아직 공개된 무료 버전이 없습니다. 준비가 되면 이곳에서 다운로드 파일과 이용 안내를 확인할 수 있습니다.";
         if (notify) notify.hidden = false;
-        if (lead) lead.textContent = "공개되면 신청 없이 바로 다운로드할 수 있는 무료 체험판입니다. 사용 기한이 없습니다.";
-        if (bottomCopy) bottomCopy.textContent = "공개되면 신청 없이 바로 받을 수 있는 무료 체험판입니다. 사용 기한이 없습니다.";
-        if (mobileDockCopy) mobileDockCopy.textContent = "무료 체험판 공개 알림";
+        if (lead) lead.textContent = "공개되면 신청 없이 바로 다운로드할 수 있는 무료 버전입니다. 사용 기한이 없습니다.";
+        if (bottomCopy) bottomCopy.textContent = "공개되면 신청 없이 바로 받을 수 있는 무료 버전입니다. 사용 기한이 없습니다.";
+        if (mobileDockCopy) mobileDockCopy.textContent = "무료 버전 공개 알림";
       } else {
         if (notify) notify.hidden = true;
-        status.textContent = result.state === "available" ? "체험판 다운로드" : "배포 파일 준비 중";
+        status.textContent = result.state === "available" ? "무료 버전 다운로드" : "배포 파일 준비 중";
         message.textContent = result.state === "available"
           ? "압축 파일 하나를 내려받아 풀면 바로 실행됩니다."
-          : "체험판 소식은 공개되었지만 다운로드할 수 있는 Windows 배포 파일은 아직 없습니다. 공식 Release의 안내를 확인하세요.";
+          : "무료 버전 소식은 공개되었지만 다운로드할 수 있는 Windows 배포 파일은 아직 없습니다. 공식 Release의 안내를 확인하세요.";
         if (result.state === "available") {
-          if (heroLabel) heroLabel.textContent = `Windows 체험판 받기 (v${result.version})`;
-          if (headerLink) headerLink.textContent = "체험판 받기";
-          if (mobileDockLink) mobileDockLink.textContent = "체험판 받기";
-          if (mobileDockCopy) mobileDockCopy.textContent = `무료 체험판 v${result.version}`;
-          if (bottomLink) setLinkLabel(bottomLink, "체험판 받으러 이동", "↑");
+          if (heroLabel) heroLabel.textContent = `Windows 무료 버전 받기 (v${result.version})`;
+          if (headerLink) headerLink.textContent = "무료 버전 받기";
+          if (mobileDockLink) mobileDockLink.textContent = "무료 버전 받기";
+          if (mobileDockCopy) mobileDockCopy.textContent = `무료 버전 v${result.version}`;
+          if (bottomLink) setLinkLabel(bottomLink, "무료 버전 받으러 이동", "↑");
           if (bottomCopy) bottomCopy.textContent = "직접 짠 래더로 MINI MPS를 움직여 보세요.";
         }
         showRelease(result);
