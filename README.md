@@ -106,7 +106,7 @@
 
 ## 의견 제보, 알림 구독 및 권리 고지
 
-- **체험 후 설문**: 앱 종료 시 선택형 설문 참여 여부를 묻습니다. 실행에 막혔거나 의견을 남기시려면 [무료 버전 설문(Google Forms)](https://docs.google.com/forms/d/e/1FAIpQLSc0Yhx-0pLgTDBpMvXx29FrXEcGQxNz2F5vwyN28JjxgcMViw/viewform)에 로그인 없이 응답하실 수 있습니다. 설문 응답은 수집일로부터 90일 이후 순차 삭제되며, 앱은 설문 응답이나 프로젝트 파일, 사용 기록을 자동으로 전송하지 않습니다.
+- **체험 후 설문**: 앱 종료 시 선택형 설문 참여 여부를 묻습니다. 사용 경험은 [무료 버전 설문(Google Forms)](https://docs.google.com/forms/d/e/1FAIpQLSc0Yhx-0pLgTDBpMvXx29FrXEcGQxNz2F5vwyN28JjxgcMViw/viewform)(5문항, 약 1분)에 로그인 없이 응답하실 수 있고, 실행에 막힌 점은 아래 공개 GitHub Issues에 남겨 주세요. 설문 응답은 수집일로부터 90일 이후 순차 삭제되며, 앱은 설문 응답이나 프로젝트 파일, 사용 기록을 자동으로 전송하지 않습니다.
 - **버그 및 기능 제안**: [공개 GitHub Issues](https://github.com/plcmanjp/digitaltwinmax/issues)에 남겨 주세요. 공개 게시판이므로 개인정보, 연락처, 고객 도면, PLC 네트워크 주소 등 민감정보는 올리지 마세요.
 - **비공개 및 도입 문의**: [digitaltwinmax@googlegroups.com](mailto:digitaltwinmax@googlegroups.com)
 - **새 무료 버전 알림 구독**: 이 저장소 상단의 `Watch -> Custom -> Releases`를 선택하거나, [Google 소식 그룹](https://groups.google.com/g/digitaltwinmax-tester) 가입 또는 [구독 메일 보내기](mailto:digitaltwinmax-tester+subscribe@googlegroups.com?subject=subscribe)를 이용해 주세요.
